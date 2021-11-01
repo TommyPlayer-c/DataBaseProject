@@ -62,7 +62,7 @@ input[name=year] {
     text-decoration: none;
     cursor: pointer;
     background-color: white;
-    color: black;
+    color: blue;
     border: 1px solid #555555;
     border-radius: 5px;
 }
