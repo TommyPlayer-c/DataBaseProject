@@ -19,7 +19,10 @@
     </h2>
     <nav>
         <ul>
-            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('index') }}">Song</a></li>
+        </ul>
+        <ul>
+            <li><a href="{{ url_for('SingerPage') }}">Singer</a></li>
         </ul>
     </nav>
     {% block content %}{% endblock %}

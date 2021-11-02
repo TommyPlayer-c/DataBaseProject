@@ -1,10 +1,11 @@
 import os
 import sys
 
+
 import click
 from flask import Flask, render_template, request, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
-import pandas as pd
+
 
 app = Flask(__name__)
 app.debug = True
@@ -37,12 +38,13 @@ def forge():
     for m in musics:
         music = Music(song_name=m['song_name'], year=m['year'], singer=m['singer'])
         db.session.add(music)
-
+    
+    import pandas as pd
     singerDF = pd.read_csv("./data/singer.csv", dtype=str)
-    for row in singerDF:
+    for row in singerDF.itertuples():
         singer = Singer(singer=row[2], gender=row[3] ,language=row[4])
         db.session.add(singer)
-    
+
     db.session.commit()
     click.echo('Done.')
 
@@ -62,7 +64,6 @@ class Singer(db.Model):
     singer = db.Column(db.String(50))
     gender = db.Column(db.String(20))
     language = db.Column(db.String(30))
-
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -89,6 +90,25 @@ def index():
     musics = Music.query.all()
     return render_template('index.html', musics=musics)
 
+@app.route('/singer', methods=['GET', 'POST'])
+def SingerPage():
+    # if request.method == 'POST':
+    #     song_name = request.form['song_name']
+    #     year = request.form['year']
+    #     singer = request.form['singer']
+
+    #     # if not title or not year or len(year) > 4 or len(title) > 60:
+    #     #     flash('Invalid input.')
+    #     #     return redirect(url_for('index'))
+
+    #     music = Music(song_name=song_name, year=year, singer=singer)
+    #     db.session.add(music)
+    #     db.session.commit()
+    #     flash('Item created.')
+    #     return redirect(url_for('index'))
+
+    singers = Singer.query.all()
+    return render_template('SingerPage.html', singers=singers)
 
 @app.route('/music/edit/<int:music_id>', methods=['GET', 'POST'])
 def edit(music_id):

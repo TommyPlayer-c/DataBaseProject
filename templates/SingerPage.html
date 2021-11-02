@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>{{ singers|length }} Titles</p>
+<p> Aha! </p>
+
+<ul class="singer-list">
+    {% for singer in singers %}
+    <table border="1" width="300">
+    <tr>
+        <td>{{ singer.singer }}</td>
+        <td>{{ singer.gender }}</td>
+        <td>{{ singer.language}}</td>
+    </tr>
+    </table>
+    {% endfor %}
+</ul>
+
+<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
+{% endblock %}
