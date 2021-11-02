@@ -6,8 +6,8 @@
 
 <form method="post">
     Song_name <input type="text" name="song_name" autocomplete="off" required>
-    Year <input type="text" name="year" autocomplete="off" required>
-    Singer <input type="text" name="singer" autocomplete="off" required>
+    Type <input type="text" name="type" autocomplete="off" required>
+    Singer <input type="text" name="singer_name" autocomplete="off" required>
     <input class="btn" type="submit" name="submit" value="Add">
 </form>
 <ul class="music-list">
@@ -15,8 +15,8 @@
     <table border="1" width="300">
     <tr>
         <td>{{ music.song_name }}</td>
-        <td>{{ music.year }}</td>
-        <td>{{music.singer}}</td>
+        <td>{{ music.type }}</td>
+        <td>{{music.singer_name}}</td>
         <td><a class="btn" href="{{ url_for('edit', music_id=music.id) }}">Edit</a></td>
         <td>
             <form class="inline-form" method="post" action="{{ url_for('delete', music_id=music.id) }}">
