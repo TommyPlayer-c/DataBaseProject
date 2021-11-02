@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import sys
 
@@ -8,7 +7,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost:3306/watchlist'
+app.debug = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost:3306/music'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
 # 在扩展类实例化前加载配置
 db = SQLAlchemy(app)
@@ -29,45 +29,25 @@ def forge():
     """Generate fake data."""
     db.create_all()
 
-    name = 'Tommy'
-    movies = [
-        {'title': 'My Neighbor Totoro', 'year': '1988'},
-        {'title': 'Dead Poets Society', 'year': '1989'},
-        {'title': 'A Perfect World', 'year': '1993'},
-        {'title': 'Leon', 'year': '1994'},
-        {'title': 'Mahjong', 'year': '1996'},
-        {'title': 'Swallowtail Butterfly', 'year': '1996'},
-        {'title': 'King of Comedy', 'year': '1999'},
-        {'title': 'Devils on the Doorstep', 'year': '1999'},
-        {'title': 'WALL-E', 'year': '2008'},
-        {'title': 'The Pork of Music', 'year': '2012'},
+    musics = [
+        {'song_name': '一路向北', 'year': '1988', 'singer': 'Jay Chou'},
+        {'song_name': '一路向北', 'year': '1925', 'singer': 'Jay Chou'},
+        {'song_name': '一路向北', 'year': '1922', 'singer': 'Jay Chou'},
     ]
 
-    user = User(name=name)
-    db.session.add(user)
-    for m in movies:
-        movie = Movie(title=m['title'], year=m['year'])
-        db.session.add(movie)
+    for m in musics:
+        music = Music(song_name=m['song_name'], year=m['year'], singer=m['singer'])
+        db.session.add(music)
 
     db.session.commit()
     click.echo('Done.')
 
 
-class User(db.Model):
+class Music(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20))
-
-
-class Movie(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(60))
+    song_name = db.Column(db.String(50))
     year = db.Column(db.String(4))
-
-
-@app.context_processor
-def inject_user():
-    user = User.query.first()
-    return dict(user=user)
+    singer = db.Column(db.String(50))
 
 
 @app.errorhandler(404)
@@ -78,37 +58,39 @@ def page_not_found(e):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        title = request.form['title']
+        song_name = request.form['song_name']
         year = request.form['year']
+        singer = request.form['singer']
 
-        if not title or not year or len(year) > 4 or len(title) > 60:
-            flash('Invalid input.')
-            return redirect(url_for('index'))
+        # if not title or not year or len(year) > 4 or len(title) > 60:
+        #     flash('Invalid input.')
+        #     return redirect(url_for('index'))
 
-        movie = Movie(title=title, year=year)
-        db.session.add(movie)
+        music = Music(song_name=song_name, year=year, singer=singer)
+        db.session.add(music)
         db.session.commit()
         flash('Item created.')
         return redirect(url_for('index'))
 
-    movies = Movie.query.all()
-    return render_template('index.html', movies=movies)
+    musics = Music.query.all()
+    return render_template('index.html', musics=musics)
 
 
-@app.route('/movie/edit/<int:movie_id>', methods=['GET', 'POST'])
-def edit(movie_id):
-    movie = Movie.query.get_or_404(movie_id)
+@app.route('/music/edit/<int:music_id>', methods=['GET', 'POST'])
+def edit(music_id):
+    music = Music.query.get_or_404(music_id)
 
     if request.method == 'POST':
         title = request.form['title']
         year = request.form['year']
 
-        if not title or not year or len(year) > 4 or len(title) > 60:
-            flash('Invalid input.')
-            return redirect(url_for('edit', movie_id=movie_id))
+        # if not title or not year or len(year) > 4 or len(title) > 60:
+        #     flash('Invalid input.')
+        #     return redirect(url_for('edit', movie_id=movie_id))
 
-        movie.title = title
-        movie.year = year
+        music.song_name = song_name
+        music.year = year   
+        music.singer = singer
         db.session.commit()
         flash('Item updated.')
         return redirect(url_for('index'))
@@ -116,10 +98,13 @@ def edit(movie_id):
     return render_template('edit.html', movie=movie)
 
 
-@app.route('/movie/delete/<int:movie_id>', methods=['POST'])
-def delete(movie_id):
-    movie = Movie.query.get_or_404(movie_id)
-    db.session.delete(movie)
+@app.route('/movie/delete/<int:music_id>', methods=['POST'])
+def delete(music_id):
+    music = Music.query.get_or_404(music_id)
+    db.session.delete(music)
     db.session.commit()
     flash('Item deleted.')
     return redirect(url_for('index'))
+
+if __name__ == '__main__':
+    app.run(debug=True)

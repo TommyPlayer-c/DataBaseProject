@@ -4,9 +4,9 @@
     {% block head %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user.name }}'s Watchlist</title>
+    <title>STY Music list</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css"> -->
     {% endblock %}
 </head>
 <body>
@@ -15,7 +15,7 @@
     {% endfor %}
     <h2>
         <img alt="Avatar" class="avatar" src="{{ url_for('static', filename='images/avatar.png') }}">
-        {{ user.name }}'s Watchlist
+        STY's Music list
     </h2>
     <nav>
         <ul>
