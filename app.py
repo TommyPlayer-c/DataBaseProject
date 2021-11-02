@@ -4,7 +4,7 @@ import sys
 import click
 from flask import Flask, render_template, request, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
-
+import pandas as pd
 
 app = Flask(__name__)
 app.debug = True
@@ -34,20 +34,34 @@ def forge():
         {'song_name': '一路向北', 'year': '1925', 'singer': 'Jay Chou'},
         {'song_name': '一路向北', 'year': '1922', 'singer': 'Jay Chou'},
     ]
-
     for m in musics:
         music = Music(song_name=m['song_name'], year=m['year'], singer=m['singer'])
         db.session.add(music)
 
+    singerDF = pd.read_csv("./data/singer.csv", dtype=str)
+    for row in singerDF:
+        singer = Singer(singer=row[2], gender=row[3] ,language=row[4])
+        db.session.add(singer)
+    
     db.session.commit()
     click.echo('Done.')
 
 
 class Music(db.Model):
+    __tablename__ = 'music'
+
     id = db.Column(db.Integer, primary_key=True)
     song_name = db.Column(db.String(50))
     year = db.Column(db.String(4))
     singer = db.Column(db.String(50))
+
+class Singer(db.Model):
+    __tablename__ = 'singer'
+        
+    id = db.Column(db.Integer, primary_key=True)
+    singer = db.Column(db.String(50))
+    gender = db.Column(db.String(20))
+    language = db.Column(db.String(30))
 
 
 @app.errorhandler(404)
@@ -81,8 +95,9 @@ def edit(music_id):
     music = Music.query.get_or_404(music_id)
 
     if request.method == 'POST':
-        title = request.form['title']
+        song_name = request.form['song_name']
         year = request.form['year']
+        singer = request.form['singer']
 
         # if not title or not year or len(year) > 4 or len(title) > 60:
         #     flash('Invalid input.')
@@ -95,10 +110,10 @@ def edit(music_id):
         flash('Item updated.')
         return redirect(url_for('index'))
 
-    return render_template('edit.html', movie=movie)
+    return render_template('edit.html', music=music)
 
 
-@app.route('/movie/delete/<int:music_id>', methods=['POST'])
+@app.route('/delete/<int:music_id>', methods=['POST'])
 def delete(music_id):
     music = Music.query.get_or_404(music_id)
     db.session.delete(music)

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- <p>{{ movies|length }} Titles</p> -->
+<p>{{ musics|length }} Titles</p>
 <p> Aha! </p>
 
 <form method="post">
@@ -12,16 +12,22 @@
 </form>
 <ul class="music-list">
     {% for music in musics %}
-    <li>{{ music.song_name }} - {{ music.year }} - {{music.singer}}
-        <span class="float-right">
-            <a class="btn" href="{{ url_for('edit', music_id=music.id) }}">Edit</a>
-            <form class="inline-form" method="post" action="{{ url_for('.delete', music_id=music.id) }}">
+    <table border="1" width="300">
+    <tr>
+        <td>{{ music.song_name }}</td>
+        <td>{{ music.year }}</td>
+        <td>{{music.singer}}</td>
+        <td><a class="btn" href="{{ url_for('edit', music_id=music.id) }}">Edit</a></td>
+        <td>
+            <form class="inline-form" method="post" action="{{ url_for('delete', music_id=music.id) }}">
                 <input class="btn" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
             </form>
-            
-            <a class="imdb" href="https://www.imdb.com/find?q={{ music.title }}" target="_blank" title="Find this music on IMDb">IMDb</a>
-        </span>
-    </li>
+        </td>
+        <td>
+            <a class="wy" href="https://music.163.com/#/search/m/?s={{ music.song_name}}" target="_blank" title="Find this music on wy">网易云音乐</a>
+        </td>
+    </tr>
+    </table>
     {% endfor %}
 </ul>
 
