@@ -16,8 +16,8 @@
     <tr>
         <td>{{ music.song_name }}</td>
         <td>{{ music.type }}</td>
-        <td>{{music.singer_name}}</td>
-        <td><a class="btn" href="{{ url_for('edit', music_id=music.id) }}">Edit</a></td>
+        <td>{{ music.singer_name }}</td>
+        <td> <a class="btn" href="{{ url_for('edit', music_id=music.id) }}">Edit</a></td>
         <td>
             <form class="inline-form" method="post" action="{{ url_for('delete', music_id=music.id) }}">
                 <input class="btn" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
