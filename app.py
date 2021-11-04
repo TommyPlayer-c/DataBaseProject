@@ -30,6 +30,19 @@ def forge():
     """Generate fake data."""
     db.create_all()
 
+    # 这里创建表时要注意顺序
+    langDF = pd.read_csv("./data/language.csv", dtype=str)
+    for row in langDF.itertuples():
+        langrow = Language(language_name=row[1], area=row[2])
+        db.session.add(langrow)
+    db.session.commit()
+
+    typeDF = pd.read_csv("./data/type.csv", dtype=str)
+    for row in typeDF.itertuples():
+        typerow = Type(type_name=row[1], popular_rate=row[2])
+        db.session.add(typerow)
+    db.session.commit()
+
     singerDF = pd.read_csv("./data/singer.csv", dtype=str)
     for row in singerDF.itertuples():
         singer = Singer(singer_name=row[1], gender=row[2] ,language=row[3])
@@ -50,7 +63,7 @@ class Music(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     song_name = db.Column(db.String(50))
-    type = db.Column(db.String(20))
+    type = db.Column(db.String(20), db.ForeignKey("type.type_name"))
     singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name"))
 
 
@@ -60,7 +73,29 @@ class Singer(db.Model):
     # singer_id = db.Column(db.Integer, primary_key=True)
     singer_name = db.Column(db.String(50), primary_key=True)
     gender = db.Column(db.String(20))
-    language = db.Column(db.String(30))
+    language = db.Column(db.String(30), db.ForeignKey("language.language_name"))
+
+class Type(db.Model):
+    __tablename__ = 'type'
+        
+    type_name = db.Column(db.String(20), primary_key=True)
+    popular_rate = db.Column(db.Float)
+
+
+class Language(db.Model):
+    __tablename__ = 'language'
+        
+    language_name = db.Column(db.String(30), primary_key=True)
+    area = db.Column(db.String(20))
+
+
+class User(db.Model):
+    __tablename__ = 'user'
+    
+    user_id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String(50))
+    user_gender = db.Column(db.String(20))
+    type = db.Column(db.String(20))
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -139,10 +174,11 @@ def delete(music_id):
     flash('Item deleted.')
     return redirect(url_for('index'))
 
-# @app.route('/ShowSinger/<Asinger>', methods=['GET'])
-# def ShowSinger(Asinger):
-#     ASinger = Singer.query.get_or_404(singer)
-#     return redirect(url_for('ShowSinger'), ASinger=ASinger)
+@app.route('/ShowSinger/<int:music_id>', methods=['GET', 'POST'])
+def ShowSinger(music_id):
+    music = Music.query.get_or_404(music_id)
+    singer = Singer.query.get_or_404(music.singer_name)
+    return render_template('ShowSinger.html', singer=singer)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -12,11 +12,11 @@
 </form>
 <ul class="music-list">
     {% for music in musics %}
-    <table border="1" width="300">
+    <table border="1" cellspacing="0" width="40%">
     <tr>
         <td>{{ music.song_name }}</td>
         <td>{{ music.type }}</td>
-        <td>{{ music.singer_name }}</td>
+        <td> <a class="btn" href="{{ url_for('ShowSinger', music_id=music.id) }}">{{ music.singer_name }}</a> </td>
         <td> <a class="btn" href="{{ url_for('edit', music_id=music.id) }}">Edit</a></td>
         <td>
             <form class="inline-form" method="post" action="{{ url_for('delete', music_id=music.id) }}">
