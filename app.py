@@ -53,8 +53,14 @@ def forge():
     for row in musicsDF.itertuples():
         music = Music(song_name=row[2], type=row[3], singer_name=row[4])
         db.session.add(music)
-    
     db.session.commit()
+
+    userDF = pd.read_csv("./data/user.csv", dtype=str)
+    for row in userDF.itertuples():
+        user = User(user_name=row[2], user_gender=row[3], type=row[4])
+        db.session.add(user)
+    db.session.commit()
+
     click.echo('Done.')
 
 
@@ -95,7 +101,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(50))
     user_gender = db.Column(db.String(20))
-    type = db.Column(db.String(20))
+    type = db.Column(db.String(20), db.ForeignKey("type.type_name"))
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -143,6 +149,12 @@ def SingerPage():
     singers = Singer.query.all()
     return render_template('SingerPage.html', singers=singers)
 
+
+@app.route('/user', methods=['GET', 'POST'])
+def UserPage():
+    users = User.query.all()
+    return render_template('UserPage.html', users=users)
+
 @app.route('/music/edit/<int:music_id>', methods=['GET', 'POST'])
 def edit(music_id):
     music = Music.query.get_or_404(music_id)
@@ -178,7 +190,8 @@ def delete(music_id):
 def ShowSinger(music_id):
     music = Music.query.get_or_404(music_id)
     singer = Singer.query.get_or_404(music.singer_name)
-    return render_template('ShowSinger.html', singer=singer)
+    songs = Music.query.filter(Music.singer_name==music.singer_name)
+    return render_template('ShowSinger.html', singer=singer, songs=songs)
 
 if __name__ == '__main__':
     app.run(debug=True)

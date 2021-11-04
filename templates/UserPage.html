@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>{{ singers|length }} Titles</p>
-<p> 下面是歌手信息 </p>
+<p>{{ users|length }} Titles</p>
+<p> 下面是用户信息 </p>
 
 <ul class="singer-list">
-    {% for singer in singers %}
+    {% for user in users %}
     <table border="1" cellspacing="0" width="40%">
     <tr>    
-        <td>{{ singer.singer_name }}</td>
-        <td>{{ singer.gender }}</td>
-        <td>{{ singer.language }}</td>
+        <td>{{ user.user_name }}</td>
+        <td>{{ user.user_gender }}</td>
+        <td>{{ user.type }}</td>
     </tr>
     </table>
     {% endfor %}

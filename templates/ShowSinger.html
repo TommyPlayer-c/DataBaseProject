@@ -2,14 +2,25 @@
 
 {% block content %}
 
-<ul class="singer-list">
-    <table border="1" width="500">
+<table border="1" width="500">
     <tr>
         <td>{{ singer.singer_name }}</td>
         <td>{{ singer.gender }}</td>
         <td>{{ singer.language }}</td>
     </tr>
+</table>
+    
+<ul class="singer-list">
+    
+    <P>{{ singer.singer_name }} 的歌单</P>
+    {% for song in songs %}
+    <table border="1" cellspacing="0" width="40%">
+    <tr>    
+        <td>{{ song.song_name }}</td>
+        <td>{{ song.type }}</td>
+    </tr>
     </table>
+    {% endfor %}
 </ul>
 
 <img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
