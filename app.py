@@ -115,7 +115,9 @@ def index():
         type = request.form['type']
         singer_name = request.form['singer_name']
 
-        # if not title or not type or len(type) > 4 or len(title) > 60:
+        # typeResult = Type.query.filter(Type.type_name==type)
+        # singerResult = Singer.query.filter(Singer.singer_name==singer_name)
+        # if typeResult is None or singerResult is None:
         #     flash('Invalid input.')
         #     return redirect(url_for('index'))
 
@@ -130,21 +132,22 @@ def index():
 
 @app.route('/singer', methods=['GET', 'POST'])
 def SingerPage():
-    # to do
-    # if request.method == 'POST':
-    #     song_name = request.form['song_name']
-    #     type = request.form['type']
-    #     singer = request.form['singer']
+    if request.method == 'POST':
+        singer_name = request.form['singer_name']
+        gender = request.form['gender']
+        language = request.form['language']
 
-    #     # if not title or not type or len(type) > 4 or len(title) > 60:
-    #     #     flash('Invalid input.')
-    #     #     return redirect(url_for('index'))
+        # typeResult = Type.query.filter(Type.type_name==type)
+        # singerResult = Singer.query.filter(Singer.singer_name==singer_name)
+        # if typeResult is None or singerResult is None:
+        #     flash('Invalid input.')
+        #     return redirect(url_for('index'))
 
-    #     music = Music(song_name=song_name, type=type, singer=singer)
-    #     db.session.add(music)
-    #     db.session.commit()
-    #     flash('Item created.')
-    #     return redirect(url_for('index'))
+        singer = Singer(singer_name=singer_name, gender=gender, language=language)
+        db.session.add(singer)
+        db.session.commit()
+        flash('Item created.')
+        return redirect(url_for('SingerPage'))
 
     singers = Singer.query.all()
     return render_template('SingerPage.html', singers=singers)
@@ -185,6 +188,16 @@ def delete(music_id):
     db.session.commit()
     flash('Item deleted.')
     return redirect(url_for('index'))
+    # return redirect(request.referrer)
+
+@app.route('/singer/delete/<string:singer_name>', methods=['POST'])
+def DeleteSinger(singer_name):
+    singer = Singer.query.get_or_404(singer_name)
+    db.session.delete(singer)
+    db.session.commit()
+    flash('Item deleted.')
+    return redirect(url_for('SingerPage'))
+    # return redirect(request.referrer)
 
 @app.route('/ShowSinger/<int:music_id>', methods=['GET', 'POST'])
 def ShowSinger(music_id):
@@ -194,4 +207,5 @@ def ShowSinger(music_id):
     return render_template('ShowSinger.html', singer=singer, songs=songs)
 
 if __name__ == '__main__':
+    app.config['SECRET_KEY'] = 'dev'
     app.run(debug=True)
