@@ -12,10 +12,18 @@
 </form>
 
 <ul class="singer-list">
+    <table border="1" cellspacing="0" width="40%">
+        <tr>    
+            <td> singer_name </td>
+            <td> gender </td>
+            <td> language </td>
+            <td> delete </td>
+        </tr>
+    </table>
     {% for singer in singers %}
     <table border="1" cellspacing="0" width="40%">
     <tr>    
-        <td>{{ singer.singer_name }}</td>
+        <td><a class="btn" href="{{ url_for('ShowSinger', singer_name=singer.singer_name) }}">{{ singer.singer_name }}</a></td>
         <td>{{ singer.gender }}</td>
         <td>{{ singer.language }}</td>
         <td>

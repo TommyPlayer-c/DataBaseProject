@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>{{ albums|length }} Titles</p>
 <p> 下面是专辑信息 </p>
 
 <ul class="album-list">
+    <table border="1" cellspacing="0" width="40%">
+        <tr>    
+            <td> album_name </td>
+            <td> year </td>
+            <td> singer_name </td>
+            <td> song_name </td>
+        </tr>
+    </table>
     {% for album,song in albumsAndsongs %}
     <table border="1" cellspacing="0" width="40%">
     <tr>    

@@ -51,7 +51,7 @@ def forge():
 
     musicsDF = pd.read_csv("./data/song.csv", dtype=str)
     for row in musicsDF.itertuples():
-        music = Music(song_name=row[2], type=row[3], singer_name=row[4])
+        music = Music(song_name=row[2], type=row[3], singer_name=row[4], url=row[5])
         db.session.add(music)
     db.session.commit()
 
@@ -77,7 +77,7 @@ class Music(db.Model):
     song_name = db.Column(db.String(50))
     type = db.Column(db.String(20), db.ForeignKey("type.type_name"))
     singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name"))
-
+    url = db.Column(db.String(100))
 
 class Singer(db.Model):
     __tablename__ = 'singer'
@@ -221,11 +221,10 @@ def DeleteSinger(singer_name):
     return redirect(url_for('SingerPage'))
     # return redirect(request.referrer)
 
-@app.route('/ShowSinger/<int:music_id>', methods=['GET', 'POST'])
-def ShowSinger(music_id):
-    music = Music.query.get_or_404(music_id)
-    singer = Singer.query.get_or_404(music.singer_name)
-    songs = Music.query.filter(Music.singer_name==music.singer_name)
+@app.route('/ShowSinger/<string:singer_name>', methods=['GET', 'POST'])
+def ShowSinger(singer_name):
+    singer = Singer.query.get_or_404(singer_name)
+    songs = Music.query.filter(Music.singer_name==singer_name)
     return render_template('ShowSinger.html', singer=singer, songs=songs)
 
 if __name__ == '__main__':
