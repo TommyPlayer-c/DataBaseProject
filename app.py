@@ -61,6 +61,12 @@ def forge():
         db.session.add(user)
     db.session.commit()
 
+    albumDF = pd.read_csv("./data/album.csv", dtype=str)
+    for row in albumDF.itertuples():
+        alb = Album(album_name=row[1], year=row[2], song_num=row[3], singer_name=row[4])
+        db.session.add(alb)
+    db.session.commit()
+
     click.echo('Done.')
 
 
@@ -102,6 +108,15 @@ class User(db.Model):
     user_name = db.Column(db.String(50))
     user_gender = db.Column(db.String(20))
     type = db.Column(db.String(20), db.ForeignKey("type.type_name"))
+
+
+class Album(db.Model):
+    __tablename__ = 'album'
+    
+    album_name = db.Column(db.String(50), primary_key=True)
+    year = db.Column(db.Integer)
+    song_num = db.Column(db.Integer, db.ForeignKey("music.id"))
+    singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name"))
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -157,6 +172,13 @@ def SingerPage():
 def UserPage():
     users = User.query.all()
     return render_template('UserPage.html', users=users)
+
+
+@app.route('/album', methods=['GET', 'POST'])
+def AlbumPage():
+    albums = Album.query.all()
+    songs = db.session.query(Music).join(Album)
+    return render_template('AlbumPage.html', albumsAndsongs=zip(albums,songs))
 
 @app.route('/music/edit/<int:music_id>', methods=['GET', 'POST'])
 def edit(music_id):

@@ -19,13 +19,16 @@
     </h2>
     <nav>
         <ul>
-            <li><a href="{{ url_for('index') }}">Song</a></li>
+            <li><a href="{{ url_for('index') }}">Music</a></li>
         </ul>
         <ul>
             <li><a href="{{ url_for('SingerPage') }}">Singer</a></li>
         </ul>
         <ul>
             <li><a href="{{ url_for('UserPage') }}">User</a></li>
+        </ul>
+        <ul>
+            <li><a href="{{ url_for('AlbumPage') }}">Album</a></li>
         </ul>
     </nav>
     {% block content %}{% endblock %}

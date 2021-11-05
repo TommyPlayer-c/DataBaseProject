@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>{{ albums|length }} Titles</p>
+<p> 下面是专辑信息 </p>
+
+<ul class="album-list">
+    {% for album,song in albumsAndsongs %}
+    <table border="1" cellspacing="0" width="40%">
+    <tr>    
+        <td>{{ album.album_name }}</td>
+        <td>{{ album.year }}</td>
+        <td>{{ album.singer_name }}</td>
+        <td>{{ song.song_name }}</td>
+    </tr>
+    </table>
+    {% endfor %}
+</ul>
+
+<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
+{% endblock %}
