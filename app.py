@@ -75,8 +75,8 @@ class Music(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     song_name = db.Column(db.String(50))
-    type = db.Column(db.String(20), db.ForeignKey("type.type_name"))
-    singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name"))
+    type = db.Column(db.String(20), db.ForeignKey("type.type_name", ondelete='CASCADE'))
+    singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name", ondelete='CASCADE'))
     url = db.Column(db.String(100))
 
 class Singer(db.Model):
@@ -85,7 +85,10 @@ class Singer(db.Model):
     # singer_id = db.Column(db.Integer, primary_key=True)
     singer_name = db.Column(db.String(50), primary_key=True)
     gender = db.Column(db.String(20))
-    language = db.Column(db.String(30), db.ForeignKey("language.language_name"))
+    language = db.Column(db.String(30), db.ForeignKey("language.language_name", ondelete='CASCADE'))
+    singer_song = db.relationship('Music', backref='Singer', cascade='all, delete-orphan', passive_deletes = True)
+    singer_album = db.relationship('Album', backref='Singer', cascade='all, delete-orphan', passive_deletes = True)
+
 
 class Type(db.Model):
     __tablename__ = 'type'
@@ -107,7 +110,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(50))
     user_gender = db.Column(db.String(20))
-    type = db.Column(db.String(20), db.ForeignKey("type.type_name"))
+    type = db.Column(db.String(20), db.ForeignKey("type.type_name", ondelete='CASCADE'))
 
 
 class Album(db.Model):
@@ -115,8 +118,8 @@ class Album(db.Model):
     
     album_name = db.Column(db.String(50), primary_key=True)
     year = db.Column(db.Integer)
-    song_num = db.Column(db.Integer, db.ForeignKey("music.id"))
-    singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name"))
+    song_num = db.Column(db.Integer)
+    singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name", ondelete='CASCADE'))
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -177,8 +180,7 @@ def UserPage():
 @app.route('/album', methods=['GET', 'POST'])
 def AlbumPage():
     albums = Album.query.all()
-    songs = db.session.query(Music).join(Album)
-    return render_template('AlbumPage.html', albumsAndsongs=zip(albums,songs))
+    return render_template('AlbumPage.html', albums=albums)
 
 @app.route('/music/edit/<int:music_id>', methods=['GET', 'POST'])
 def edit(music_id):

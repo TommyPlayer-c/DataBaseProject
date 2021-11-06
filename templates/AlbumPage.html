@@ -9,16 +9,16 @@
             <td> album_name </td>
             <td> year </td>
             <td> singer_name </td>
-            <td> song_name </td>
+            <td> song_num </td>
         </tr>
     </table>
-    {% for album,song in albumsAndsongs %}
+    {% for album in albums %}
     <table border="1" cellspacing="0" width="40%">
     <tr>    
         <td>{{ album.album_name }}</td>
         <td>{{ album.year }}</td>
         <td>{{ album.singer_name }}</td>
-        <td>{{ song.song_name }}</td>
+        <td>{{ album.song_num }}</td>
     </tr>
     </table>
     {% endfor %}
