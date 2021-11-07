@@ -2,7 +2,7 @@
 
 {% block content %}
 <p>{{ musics|length }} Titles</p>
-<p> 下面是音乐列表 </p>
+<p> 下面是音乐列表。注意添加音乐时，必须有对应的歌手！类型有外键限制，只能是：流行，嘻哈说唱，民谣，摇滚，古风，二次元。</p>
 
 <form method="post">
     Song_name <input type="text" name="song_name" autocomplete="off" required>

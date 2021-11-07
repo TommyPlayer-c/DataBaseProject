@@ -82,7 +82,6 @@ class Music(db.Model):
 class Singer(db.Model):
     __tablename__ = 'singer'
         
-    # singer_id = db.Column(db.Integer, primary_key=True)
     singer_name = db.Column(db.String(50), primary_key=True)
     gender = db.Column(db.String(20))
     language = db.Column(db.String(30), db.ForeignKey("language.language_name", ondelete='CASCADE'))
@@ -133,11 +132,11 @@ def index():
         type = request.form['type']
         singer_name = request.form['singer_name']
 
-        # typeResult = Type.query.filter(Type.type_name==type)
-        # singerResult = Singer.query.filter(Singer.singer_name==singer_name)
-        # if typeResult is None or singerResult is None:
-        #     flash('Invalid input.')
-        #     return redirect(url_for('index'))
+        typeResult = Type.query.filter(Type.type_name==type)
+        singerResult = Singer.query.filter(Singer.singer_name==singer_name)
+        if typeResult.count() == 0 or singerResult.count() == 0:
+            flash('Invalid input.')
+            return redirect(url_for('index'))
 
         music = Music(song_name=song_name, type=type, singer_name=singer_name)
         db.session.add(music)
@@ -155,11 +154,10 @@ def SingerPage():
         gender = request.form['gender']
         language = request.form['language']
 
-        # typeResult = Type.query.filter(Type.type_name==type)
-        # singerResult = Singer.query.filter(Singer.singer_name==singer_name)
-        # if typeResult is None or singerResult is None:
-        #     flash('Invalid input.')
-        #     return redirect(url_for('index'))
+        languageResult = Language.query.filter(Language.language_name==language)
+        if languageResult.count() == 0:
+            flash('Invalid input.')
+            return redirect(url_for('SingerPage'))
 
         singer = Singer(singer_name=singer_name, gender=gender, language=language)
         db.session.add(singer)
@@ -188,22 +186,47 @@ def edit(music_id):
 
     if request.method == 'POST':
         song_name = request.form['song_name']
-        # type = request.form['type']
-        # singer_name = request.form['singer_name']
+        type = request.form['type']
+        singer_name = request.form['singer_name']
 
-        # if not title or not type or len(type) > 4 or len(title) > 60:
-        #     flash('Invalid input.')
-        #     return redirect(url_for('edit', movie_id=movie_id))
+        typeResult = Type.query.filter(Type.type_name==type)
+        singerResult = Singer.query.filter(Singer.singer_name==singer_name)
+        if typeResult.count() == 0 or singerResult.count() == 0:
+            flash('Invalid modify.')
+            return redirect(url_for('index'))
 
         music.song_name = song_name
-        # music.type = type   
-        # music.singer_name = singer_name
+        music.type = type   
+        music.singer_name = singer_name
         db.session.commit()
         flash('Item updated.')
         return redirect(url_for('index'))
 
     return render_template('edit.html', music=music)
 
+
+@app.route('/singer/edit/<string:singer_name>', methods=['GET', 'POST'])
+def EditSinger(singer_name):
+    singer = Singer.query.get_or_404(singer_name)
+
+    if request.method == 'POST':
+        singer_name = request.form['singer_name']
+        gender = request.form['gender']
+        language = request.form['language']
+
+        languageResult = Language.query.filter(Language.language_name==language)
+        if languageResult.count() == 0:
+            flash('Invalid modify.')
+            return redirect(url_for('SingerPage'))
+
+        singer.singer_name = singer_name
+        singer.gender = gender   
+        singer.language = language
+        db.session.commit()
+        flash('Item updated.')
+        return redirect(url_for('SingerPage'))
+
+    return render_template('EditSinger.html', singer=singer)
 
 @app.route('/music/delete/<int:music_id>', methods=['POST'])
 def delete(music_id):

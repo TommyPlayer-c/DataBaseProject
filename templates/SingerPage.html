@@ -2,7 +2,7 @@
 
 {% block content %}
 <p>{{ singers|length }} Titles</p>
-<p> 下面是歌手信息 </p>
+<p> 下面是歌手信息，注意 language 有外键限制，只能是：华语，欧美，日本，韩语。 </p>
 
 <form method="post">
     歌手名 <input type="text" name="singer_name" autocomplete="off" required>
@@ -26,6 +26,7 @@
         <td><a class="btn" href="{{ url_for('ShowSinger', singer_name=singer.singer_name) }}">{{ singer.singer_name }}</a></td>
         <td>{{ singer.gender }}</td>
         <td>{{ singer.language }}</td>
+        <td> <a class="btn" href="{{ url_for('EditSinger', singer_name=singer.singer_name) }}">Edit</a></td>
         <td>
             <form class="inline-form" method="post" action="{{ url_for('DeleteSinger', singer_name=singer.singer_name) }}">
                 <input class="btn" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Edit item</h3>
+<form method="post">
+    歌手名 <input type="text" name="singer_name" autocomplete="off" required value="{{ singer.singer_name}}">
+    性别 <input type="text" name="gender" autocomplete="off" required value="{{ singer.gender }}">
+    语言 <input type="text" name="language" autocomplete="off" required value="{{ singer.language }}">
+    <input class="btn" type="submit" name="submit" value="Update">
+</form>
+{% endblock %}
