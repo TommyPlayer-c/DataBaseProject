@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Edit item</h3>
+<form method="post">
+    专辑名 <input type="text" name="album_name" autocomplete="off" required value="{{ album.album_name}}">
+    发行年 <input type="text" name="year" autocomplete="off" required value="{{ album.year }}">
+    歌曲数 <input type="text" name="song_num" autocomplete="off" required value="{{ album.song_num }}">
+    歌手 <input type="text" name="singer_name" autocomplete="off" required value="{{ album.singer_name }}">
+    <input class="btn" type="submit" name="submit" value="Update">
+</form>
+{% endblock %}

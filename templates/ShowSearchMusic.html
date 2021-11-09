@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>查询到了这首歌！</p>
+<!-- <ul class="music_item">
+    <table border="1" cellspacing="0" width="40%">
+    <tr>        
+        <td>{{ music_item.song_name }}</td>
+        <td>{{ music_item.type }}</td>
+        <td>{{ music_item.singer_name }}</td>
+    </tr>
+    </table>
+</ul> -->
+
+<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
+{% endblock %}

@@ -177,6 +177,23 @@ def UserPage():
 
 @app.route('/album', methods=['GET', 'POST'])
 def AlbumPage():
+    if request.method == 'POST':
+        album_name = request.form['album_name']
+        year = request.form['year']
+        song_num = request.form['song_num']
+        singer_name = request.form['singer_name']
+
+        singerResult = Singer.query.filter(Singer.singer_name==singer_name)
+        if singerResult.count() == 0:
+            flash('Invalid input.')
+            return redirect(url_for('AlbumPage'))
+
+        album = Album(album_name=album_name, year=year, song_num=song_num, singer_name=singer_name)
+        db.session.add(album)
+        db.session.commit()
+        flash('Item created.')
+        return redirect(url_for('AlbumPage'))
+
     albums = Album.query.all()
     return render_template('AlbumPage.html', albums=albums)
 
@@ -228,6 +245,32 @@ def EditSinger(singer_name):
 
     return render_template('EditSinger.html', singer=singer)
 
+
+@app.route('/album/edit/<string:album_name>', methods=['GET', 'POST'])
+def EditAlbum(album_name):
+    album = Album.query.get_or_404(album_name)
+
+    if request.method == 'POST':
+        album_name = request.form['album_name']
+        year = request.form['year']
+        song_num = request.form['song_num']
+        singer_name = request.form['singer_name']
+
+        singerResult = Singer.query.filter(Singer.singer_name==singer_name)
+        if singerResult.count() == 0:
+            flash('Invalid modify.')
+            return redirect(url_for('AlbumPage'))
+
+        album.album_name = album_name
+        album.year = year   
+        album.song_num = song_num
+        album.singer_name = singer_name
+        db.session.commit()
+        flash('Item updated.')
+        return redirect(url_for('AlbumPage'))
+
+    return render_template('EditAlbum.html', album=album)
+
 @app.route('/music/delete/<int:music_id>', methods=['POST'])
 def delete(music_id):
     music = Music.query.get_or_404(music_id)
@@ -245,6 +288,30 @@ def DeleteSinger(singer_name):
     flash('Item deleted.')
     return redirect(url_for('SingerPage'))
     # return redirect(request.referrer)
+
+
+@app.route('/album/delete/<string:album_name>', methods=['POST'])
+def DeleteAlbum(album_name):
+    album = Album.query.get_or_404(album_name)
+    db.session.delete(album)
+    db.session.commit()
+    flash('Item deleted.')
+    return redirect(url_for('AlbumPage'))
+    # return redirect(request.referrer)
+
+
+@app.route('/music/search/', methods=['GET', 'POST'])
+def SearchMusic():
+    if request.method == 'POST':
+        song_name = request.form['song_name']
+        music_item = Music.query.filter(Music.song_name==song_name)
+
+        if music_item.count() <= 0:
+            flash('Item not found.')
+            return redirect(url_for('SearchMusic'))
+        return render_template('ShowSearchMusic.html', music_item=music_item)
+    return render_template('SearchMusic.html')
+
 
 @app.route('/ShowSinger/<string:singer_name>', methods=['GET', 'POST'])
 def ShowSinger(singer_name):
