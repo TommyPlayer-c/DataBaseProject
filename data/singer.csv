@@ -1,31 +1,31 @@
-singer_name,singer_gender,language_name,
-林俊杰,男,华语
-薛之谦,男,华语
-李荣浩,男,华语
-邓紫棋,女,华语
-Jony J,男,华语
-404 Rapper,组合,华语
-刘聪,男,华语
-马思唯,男,华语
-KnowKnow,男,华语
-赵雷,男,华语
-汪峰,男,华语
-郑钧,男,华语
-许嵩,男,华语
-任然,女,华语
-Taylor Swift,女,欧美
-The Chainsmokers,组合,欧美
-Alan Walker,男,欧美
-Billie Eilish,女,欧美
-Coldplay,组合,欧美
-Justin Bieber,男,欧美
-Rich Brian,男,欧美
-Eminem,男,欧美
-XXXTENTACION,男,欧美
-米津玄师,男,日本
-和田光司,男,日本
-WANDS,组合,日本
-TK from 凛冽时雨,组合,日本
-BLACKPINK,组合,韩语
-BTS防弹少年团,组合,韩语
-IU,女,韩语
+singer_name,singer_gender,language_name,singer_fig
+林俊杰,男,华语,images/singer/01.jpg
+薛之谦,男,华语,images/singer/02.jpg
+李荣浩,男,华语,images/singer/03.jpg
+邓紫棋,女,华语,images/singer/04.jpg
+Jony J,男,华语,images/singer/05.jpg
+404 Rapper,组合,华语,images/singer/06.jpg
+刘聪,男,华语,images/singer/07.jpg
+马思唯,男,华语,images/singer/08.jpg
+KnowKnow,男,华语,images/singer/09.jpg
+赵雷,男,华语,images/singer/010.jpg
+汪峰,男,华语,images/singer/11.jpg
+郑钧,男,华语,images/singer/12.jpg
+许嵩,男,华语,images/singer/13.jpg
+任然,女,华语,images/singer/14.jpg
+Taylor Swift,女,欧美,images/singer/15.jpg
+The Chainsmokers,组合,欧美,images/singer/16.jpg
+Alan Walker,男,欧美,images/singer/17.jpg
+Billie Eilish,女,欧美,images/singer/18.jpg
+Coldplay,组合,欧美,images/singer/19.jpg
+Justin Bieber,男,欧美,images/singer/20.jpg
+Rich Brian,男,欧美,images/singer/21.jpg
+Eminem,男,欧美,images/singer/22.jpg
+XXXTENTACION,男,欧美,images/singer/23.jpg
+米津玄师,男,日本,images/singer/24.jpg
+和田光司,男,日本,images/singer/25.jpg
+WANDS,组合,日本,images/singer/26.jpg
+TK from 凛冽时雨,组合,日本,images/singer/27.jpg
+BLACKPINK,组合,韩语,images/singer/28.jpg
+BTS防弹少年团,组合,韩语,images/singer/29.jpg
+IU,女,韩语,images/singer/30.jpg

@@ -45,13 +45,13 @@ def forge():
 
     singerDF = pd.read_csv("./data/singer.csv", dtype=str)
     for row in singerDF.itertuples():
-        singer = Singer(singer_name=row[1], gender=row[2] ,language=row[3])
+        singer = Singer(singer_name=row[1], gender=row[2] ,language=row[3], singer_fig=row[4])
         db.session.add(singer)
     db.session.commit()
 
     musicsDF = pd.read_csv("./data/song.csv", dtype=str)
     for row in musicsDF.itertuples():
-        music = Music(song_name=row[2], type=row[3], singer_name=row[4], url=row[5])
+        music = Music(song_name=row[2], type=row[3], singer_name=row[4], url=row[5], song_fig=row[6])
         db.session.add(music)
     db.session.commit()
 
@@ -63,7 +63,7 @@ def forge():
 
     albumDF = pd.read_csv("./data/album.csv", dtype=str)
     for row in albumDF.itertuples():
-        alb = Album(album_name=row[1], year=row[2], song_num=row[3], singer_name=row[4])
+        alb = Album(album_name=row[1], year=row[2], song_num=row[3], singer_name=row[4], album_fig=row[5])
         db.session.add(alb)
     db.session.commit()
 
@@ -78,6 +78,7 @@ class Music(db.Model):
     type = db.Column(db.String(20), db.ForeignKey("type.type_name", ondelete='CASCADE'))
     singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name", ondelete='CASCADE'))
     url = db.Column(db.String(100))
+    song_fig = db.Column(db.String(50))
 
 class Singer(db.Model):
     __tablename__ = 'singer'
@@ -87,7 +88,7 @@ class Singer(db.Model):
     language = db.Column(db.String(30), db.ForeignKey("language.language_name", ondelete='CASCADE'))
     singer_song = db.relationship('Music', backref='Singer', cascade='all, delete-orphan', passive_deletes = True)
     singer_album = db.relationship('Album', backref='Singer', cascade='all, delete-orphan', passive_deletes = True)
-
+    singer_fig = db.Column(db.String(50))
 
 class Type(db.Model):
     __tablename__ = 'type'
@@ -119,6 +120,7 @@ class Album(db.Model):
     year = db.Column(db.Integer)
     song_num = db.Column(db.Integer)
     singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name", ondelete='CASCADE'))
+    album_fig = db.Column(db.String(50))
 
 @app.errorhandler(404)
 def page_not_found(e):

@@ -1,31 +1,31 @@
-album_name,year,song_num,singer_name
-幸存者,2020,6,林俊杰
-新地球,2014,13,林俊杰
-因你而在,2013,12,林俊杰
-天外来物,2020,10,薛之谦
-初学者,2016,10,薛之谦
-麻雀,2020,10,李荣浩
-耳朵,2018,10,李荣浩
-有理想,2016,11,李荣浩
-摩天动物园,2019,13,邓紫棋
-新的心跳,2015,10,邓紫棋
-24時·Am,2021,12,Jony J
-喜新恋旧,2018,11,Jony J
-黑马王子,2020,18,马思唯
-Mr.Enjoy Da Money,2019,15,KnowKnow
-2020,2020,13,汪峰
-生来彷徨,2013,19,汪峰
-青年晚报,2016,9,许嵩
-自定义,2009,9,许嵩
-folklore,2020,17,Taylor Swift
-Lover,2019,20,Taylor Swift
-reputation,2017,15,Taylor Swift
-Sick Boy,2018,10,The Chainsmokers
-Everyday Life,2019,16,Coldplay
-Justice,2021,25,Justin Bieber
-Changes,2020,17,Justin Bieber
-Purpose,2015,22,Justin Bieber
-Kamikaze,2018,13,Eminem
-Revival,2017,19,Eminem
-THE ALBUM,2020,8,BLACKPINK
-KILL THIS LOVE,2019,5,BLACKPINK
+album_name,year,song_num,singer_name,album_fig
+幸存者,2020,6,林俊杰,images/album/01.jpg
+新地球,2014,13,林俊杰,images/album/02.jpg
+因你而在,2013,12,林俊杰,images/album/03.jpg
+天外来物,2020,10,薛之谦,images/album/04.jpg
+初学者,2016,10,薛之谦,images/album/05.jpg
+麻雀,2020,10,李荣浩,images/album/06.jpg
+耳朵,2018,10,李荣浩,images/album/07.jpg
+有理想,2016,11,李荣浩,images/album/08.jpg
+摩天动物园,2019,13,邓紫棋,images/album/09.jpg
+新的心跳,2015,10,邓紫棋,images/album/010.jpg
+24時·Am,2021,12,Jony J,images/album/11.jpg
+喜新恋旧,2018,11,Jony J,images/album/12.jpg
+黑马王子,2020,18,马思唯,images/album/13.jpg
+Mr.Enjoy Da Money,2019,15,KnowKnow,images/album/14.jpg
+2020,2020,13,汪峰,images/album/15.jpg
+生来彷徨,2013,19,汪峰,images/album/16.jpg
+青年晚报,2016,9,许嵩,images/album/17.jpg
+自定义,2009,9,许嵩,images/album/18.jpg
+folklore,2020,17,Taylor Swift,images/album/19.jpg
+Lover,2019,20,Taylor Swift,images/album/20.jpg
+reputation,2017,15,Taylor Swift,images/album/21.jpg
+Sick Boy,2018,10,The Chainsmokers,images/album/22.jpg
+Everyday Life,2019,16,Coldplay,images/album/23.jpg
+Justice,2021,25,Justin Bieber,images/album/24.jpg
+Changes,2020,17,Justin Bieber,images/album/25.jpg
+Purpose,2015,22,Justin Bieber,images/album/26.jpg
+Kamikaze,2018,13,Eminem,images/album/27.jpg
+Revival,2017,19,Eminem,images/album/28.jpg
+THE ALBUM,2020,8,BLACKPINK,images/album/29.jpg
+KILL THIS LOVE,2019,5,BLACKPINK,images/album/30.jpg
