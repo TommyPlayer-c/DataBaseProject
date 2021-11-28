@@ -342,19 +342,29 @@ def SearchSinger():
     return render_template('SearchSinger.html', singer=None)
 
 
-# @app.route('/album/search/', methods=['GET', 'POST'])
-# def SearchAlbum():
-#     if request.method == 'POST':
-#         singer_name = request.form['singer_name']
+@app.route('/album/search/', methods=['GET', 'POST'])
+def SearchAlbum():
+    if request.method == 'POST':
+        album_name = request.form['album_name']
+        # year = int(request.form['year'])
+        # singer_name = request.form['singer_name']
+
+        # albums = []
+        # if album_name != None:
+        #     # filterList.append(Album.album_name == album_name)
+        #     albums = Album.query.filter(Album.album_name == album_name).first()
+        # elif year != None:
+        #     # filterList.append(Album.year == year)
+        #     albums = Album.query.filter(Album.year == year).first()
+        # else:
+        #     # filterList.append(Album.singer_name == singer_name)
+        album = Album.query.filter(Album.album_name == album_name).first()
         
-        
-#         results = Singer.query.filter(Singer.singer_name==singer_name).first()     # 获取对象要使用first函数！
-#         if singer_item == None:
-#             flash('没有找到！')
-#             return redirect(url_for('SearchSinger'))
-#         # return "查询成功!<br>歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
-#         return render_template('SearchSinger.html', results=results)
-#     return render_template('SearchSinger.html', results=None)
+        if album == None:
+            flash('没有找到！')
+            return redirect(url_for('SearchAlbum'))
+        return render_template('SearchAlbum.html', album=album)
+    return render_template('SearchAlbum.html', album=None)
 
 
 @app.route('/ShowSinger/<string:singer_name>', methods=['GET', 'POST'])

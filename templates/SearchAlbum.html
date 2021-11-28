@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="post">
+    请输入专辑名 <input type="text" name="album_name" autocomplete="off">
+    <input class="btn" type="submit" name="submit" value="查询">
+</form>
+
+<p> 专辑名：{{album.album_name}} </p>
+<p> 发行年份：{{album.year}} </p>
+<p> 歌手：{{album.singer_name}} </p>
+
+{% endblock %}
