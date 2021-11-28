@@ -72,7 +72,7 @@ def forge():
     click.echo('Done.')
 
 ###########################################################################
-#                       下面为表格实例                                     #
+#                       下面为数据库模型类                                  #
 ###########################################################################
 class Music(db.Model):
     __tablename__ = 'music'
@@ -314,12 +314,11 @@ def DeleteAlbum(album_name):
 def SearchMusic():
     if request.method == 'POST':
         song_name = request.form['song_name']
-        music_item = Music.query.filter(Music.song_name==song_name)
-
-        if music_item.count() <= 0:
+        music_item = Music.query.filter(Music.song_name==song_name).first()     # 获取对象要使用first函数！
+        if music_item == None:
             flash('没有找到！')
             return redirect(url_for('SearchMusic'))
-        
+        return "查询成功!\n\n歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
     return render_template('SearchMusic.html')
 
 
