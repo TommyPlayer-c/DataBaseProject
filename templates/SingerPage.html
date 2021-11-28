@@ -2,6 +2,7 @@
 
 {% block content %}
 <p>{{ singers|length }} Titles</p>
+<a class="btn" href="{{ url_for('SearchSinger') }}">搜索歌手</a>
 <p> 下面是歌手信息，注意 language 有外键限制，只能是：华语，欧美，日本，韩语。 </p>
 
 <form method="post">

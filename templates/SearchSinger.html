@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Edit item</h3>
+<form method="post">
+    请输入查询的歌手名 <input type="text" name="singer_name" autocomplete="off">
+    <input class="btn" type="submit" name="submit" value="查询">
+</form>
+<p> 歌手名：{{singer.singer_name}} </p>
+<p> 性别：{{singer.gender}} </p>
+<p> 语言：{{singer.language}} </p>
+
+{% endblock %}

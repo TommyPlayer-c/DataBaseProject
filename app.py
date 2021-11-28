@@ -84,6 +84,7 @@ class Music(db.Model):
     url = db.Column(db.String(100))
     song_fig = db.Column(db.String(50))
 
+
 class Singer(db.Model):
     __tablename__ = 'singer'
         
@@ -93,6 +94,7 @@ class Singer(db.Model):
     singer_song = db.relationship('Music', backref='Singer', cascade='all, delete-orphan', passive_deletes = True)
     singer_album = db.relationship('Album', backref='Singer', cascade='all, delete-orphan', passive_deletes = True)
     singer_fig = db.Column(db.String(50))
+
 
 class Type(db.Model):
     __tablename__ = 'type'
@@ -157,6 +159,7 @@ def index():
     musics = Music.query.all()
     return render_template('index.html', musics=musics)
 
+
 @app.route('/singer', methods=['GET', 'POST'])
 def SingerPage():
     if request.method == 'POST':
@@ -206,6 +209,7 @@ def AlbumPage():
 
     albums = Album.query.all()
     return render_template('AlbumPage.html', albums=albums)
+
 
 @app.route('/music/edit/<int:music_id>', methods=['GET', 'POST'])
 def EditMusic(music_id):
@@ -281,6 +285,7 @@ def EditAlbum(album_name):
 
     return render_template('EditAlbum.html', album=album)
 
+
 @app.route('/music/delete/<int:music_id>', methods=['POST'])
 def DeleteMusic(music_id):
     music = Music.query.get_or_404(music_id)
@@ -289,6 +294,7 @@ def DeleteMusic(music_id):
     flash('删除成功！')
     return redirect(url_for('index'))
     # return redirect(request.referrer)
+
 
 @app.route('/singer/delete/<string:singer_name>', methods=['POST'])
 def DeleteSinger(singer_name):
@@ -318,8 +324,22 @@ def SearchMusic():
         if music_item == None:
             flash('没有找到！')
             return redirect(url_for('SearchMusic'))
-        return "查询成功!\n\n歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
-    return render_template('SearchMusic.html')
+        # return "查询成功!<br>歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
+        return render_template('SearchMusic.html', music=music_item)
+    return render_template('SearchMusic.html', music=None)
+
+
+@app.route('/singer/search/', methods=['GET', 'POST'])
+def SearchSinger():
+    if request.method == 'POST':
+        singer_name = request.form['singer_name']
+        singer_item = Singer.query.filter(Singer.singer_name==singer_name).first()     # 获取对象要使用first函数！
+        if singer_item == None:
+            flash('没有找到！')
+            return redirect(url_for('SearchSinger'))
+        # return "查询成功!<br>歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
+        return render_template('SearchSinger.html', singer=singer_item)
+    return render_template('SearchSinger.html', singer=None)
 
 
 @app.route('/ShowSinger/<string:singer_name>', methods=['GET', 'POST'])

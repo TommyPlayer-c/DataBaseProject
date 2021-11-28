@@ -4,7 +4,10 @@
 <h3>Edit item</h3>
 <form method="post">
     请输入查询的歌曲名 <input type="text" name="song_name" autocomplete="off">
-    <input class="btn" type="submit" name="submit" value="Update">
+    <input class="btn" type="submit" name="submit" value="查询">
 </form>
+<p> 歌曲名：{{music.song_name}} </p>
+<p> 歌手：{{music.singer_name}} </p>
+<p> 类型：{{music.type}} </p>
 
 {% endblock %}
