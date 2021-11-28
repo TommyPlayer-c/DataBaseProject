@@ -151,7 +151,7 @@ def index():
         music = Music(song_name=song_name, type=type, singer_name=singer_name)
         db.session.add(music)
         db.session.commit()
-        flash('Item created.')
+        flash('增加成功！')
         return redirect(url_for('index'))
 
     musics = Music.query.all()
@@ -172,7 +172,7 @@ def SingerPage():
         singer = Singer(singer_name=singer_name, gender=gender, language=language)
         db.session.add(singer)
         db.session.commit()
-        flash('Item created.')
+        flash('增加成功！')
         return redirect(url_for('SingerPage'))
 
     singers = Singer.query.all()
@@ -201,14 +201,14 @@ def AlbumPage():
         album = Album(album_name=album_name, year=year, song_num=song_num, singer_name=singer_name)
         db.session.add(album)
         db.session.commit()
-        flash('Item created.')
+        flash('增加成功！')
         return redirect(url_for('AlbumPage'))
 
     albums = Album.query.all()
     return render_template('AlbumPage.html', albums=albums)
 
 @app.route('/music/edit/<int:music_id>', methods=['GET', 'POST'])
-def edit(music_id):
+def EditMusic(music_id):
     music = Music.query.get_or_404(music_id)
 
     if request.method == 'POST':
@@ -219,17 +219,17 @@ def edit(music_id):
         typeResult = Type.query.filter(Type.type_name==type)
         singerResult = Singer.query.filter(Singer.singer_name==singer_name)
         if typeResult.count() == 0 or singerResult.count() == 0:
-            flash('Invalid modify.')
+            flash('非法修改')
             return redirect(url_for('index'))
 
         music.song_name = song_name
         music.type = type   
         music.singer_name = singer_name
         db.session.commit()
-        flash('Item updated.')
+        flash('更新成功！')
         return redirect(url_for('index'))
 
-    return render_template('edit.html', music=music)
+    return render_template('EditMusic.html', music=music)
 
 
 @app.route('/singer/edit/<string:singer_name>', methods=['GET', 'POST'])
@@ -243,14 +243,14 @@ def EditSinger(singer_name):
 
         languageResult = Language.query.filter(Language.language_name==language)
         if languageResult.count() == 0:
-            flash('Invalid modify.')
+            flash('非法修改')
             return redirect(url_for('SingerPage'))
 
         singer.singer_name = singer_name
         singer.gender = gender   
         singer.language = language
         db.session.commit()
-        flash('Item updated.')
+        flash('更新成功！')
         return redirect(url_for('SingerPage'))
 
     return render_template('EditSinger.html', singer=singer)
@@ -268,7 +268,7 @@ def EditAlbum(album_name):
 
         singerResult = Singer.query.filter(Singer.singer_name==singer_name)
         if singerResult.count() == 0:
-            flash('Invalid modify.')
+            flash('非法修改')
             return redirect(url_for('AlbumPage'))
 
         album.album_name = album_name
@@ -276,17 +276,17 @@ def EditAlbum(album_name):
         album.song_num = song_num
         album.singer_name = singer_name
         db.session.commit()
-        flash('Item updated.')
+        flash('更新成功！')
         return redirect(url_for('AlbumPage'))
 
     return render_template('EditAlbum.html', album=album)
 
 @app.route('/music/delete/<int:music_id>', methods=['POST'])
-def delete(music_id):
+def DeleteMusic(music_id):
     music = Music.query.get_or_404(music_id)
     db.session.delete(music)
     db.session.commit()
-    flash('Item deleted.')
+    flash('删除成功！')
     return redirect(url_for('index'))
     # return redirect(request.referrer)
 
@@ -295,7 +295,7 @@ def DeleteSinger(singer_name):
     singer = Singer.query.get_or_404(singer_name)
     db.session.delete(singer)
     db.session.commit()
-    flash('Item deleted.')
+    flash('删除成功！')
     return redirect(url_for('SingerPage'))
     # return redirect(request.referrer)
 
@@ -305,7 +305,7 @@ def DeleteAlbum(album_name):
     album = Album.query.get_or_404(album_name)
     db.session.delete(album)
     db.session.commit()
-    flash('Item deleted.')
+    flash('删除成功！')
     return redirect(url_for('AlbumPage'))
     # return redirect(request.referrer)
 
@@ -317,9 +317,9 @@ def SearchMusic():
         music_item = Music.query.filter(Music.song_name==song_name)
 
         if music_item.count() <= 0:
-            flash('Item not found.')
+            flash('没有找到！')
             return redirect(url_for('SearchMusic'))
-        return render_template('ShowSearchMusic.html', music_item=music_item)
+        
     return render_template('SearchMusic.html')
 
 
@@ -329,6 +329,10 @@ def ShowSinger(singer_name):
     songs = Music.query.filter(Music.singer_name==singer_name)
     return render_template('ShowSinger.html', singer=singer, songs=songs)
 
+
+###########################################################################
+#                       下面为主函数（debug模式）                           #
+###########################################################################
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = 'dev'
     app.run(debug=True)

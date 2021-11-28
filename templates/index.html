@@ -27,9 +27,9 @@
         <td><a class="wy" href="{{music.url}}" target="_blank" title="Find this music on wy">{{ music.song_name }}</a></td>
         <td>{{ music.type }}</td>
         <td> <a class="btn" href="{{ url_for('ShowSinger', singer_name=music.singer_name) }}">{{ music.singer_name }}</a> </td>
-        <td> <a class="btn" href="{{ url_for('edit', music_id=music.id) }}">Edit</a></td>
+        <td> <a class="btn" href="{{ url_for('EditMusic', music_id=music.id) }}">Edit</a></td>
         <td>
-            <form class="inline-form" method="post" action="{{ url_for('delete', music_id=music.id) }}">
+            <form class="inline-form" method="post" action="{{ url_for('DeleteMusic', music_id=music.id) }}">
                 <input class="btn" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
             </form>
         </td>
