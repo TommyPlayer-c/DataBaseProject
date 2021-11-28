@@ -14,7 +14,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的
 # 在扩展类实例化前加载配置
 db = SQLAlchemy(app)
 
-
+###########################################################################
+#                       下面为自定义命令                                   #
+###########################################################################
 @app.cli.command()
 @click.option('--drop', is_flag=True, help='Create after drop.')
 def initdb(drop):
@@ -69,7 +71,9 @@ def forge():
 
     click.echo('Done.')
 
-
+###########################################################################
+#                       下面为表格实例                                     #
+###########################################################################
 class Music(db.Model):
     __tablename__ = 'music'
 
@@ -122,6 +126,10 @@ class Album(db.Model):
     singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name", ondelete='CASCADE'))
     album_fig = db.Column(db.String(50))
 
+
+###########################################################################
+#                       下面为视图函数                                     #
+###########################################################################
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
