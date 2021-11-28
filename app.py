@@ -156,7 +156,7 @@ def index():
         flash('增加成功！')
         return redirect(url_for('index'))
 
-    musics = Music.query.all()
+    musics = Music.query.order_by(Music.singer_name).all()
     return render_template('index.html', musics=musics)
 
 
@@ -340,6 +340,21 @@ def SearchSinger():
         # return "查询成功!<br>歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
         return render_template('SearchSinger.html', singer=singer_item)
     return render_template('SearchSinger.html', singer=None)
+
+
+# @app.route('/album/search/', methods=['GET', 'POST'])
+# def SearchAlbum():
+#     if request.method == 'POST':
+#         singer_name = request.form['singer_name']
+        
+        
+#         results = Singer.query.filter(Singer.singer_name==singer_name).first()     # 获取对象要使用first函数！
+#         if singer_item == None:
+#             flash('没有找到！')
+#             return redirect(url_for('SearchSinger'))
+#         # return "查询成功!<br>歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
+#         return render_template('SearchSinger.html', results=results)
+#     return render_template('SearchSinger.html', results=None)
 
 
 @app.route('/ShowSinger/<string:singer_name>', methods=['GET', 'POST'])
