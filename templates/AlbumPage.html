@@ -1,45 +1,112 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
-<a class="btn" href="{{ url_for('SearchAlbum') }}">搜索专辑</a>
-<p> 下面是专辑信息 </p>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        .box {
+            display: table;
+            float: left;
+            width: 30%;
+            text-align: center;
+        }
 
-<form method="post">
-    专辑名 <input type="text" name="album_name" autocomplete="off" required>
-    发行年 <input type="text" name="year" autocomplete="off" required>
-    歌曲数量 <input type="text" name="song_num" autocomplete="off" required>
-    歌手 <input type="text" name="singer_name" autocomplete="off" required>
-    <input class="btn" type="submit" name="submit" value="Add">
-</form>
+        .box img {
+            margin: auto;
+            width: 50%;
+            height: 50%;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            top: 0;
+            width: 100%;
+        }
 
-<ul class="album-list">
-    <table border="1" cellspacing="0" width="40%">
-        <tr>    
-            <td> album_name </td>
-            <td> year </td>
-            <td> singer_name </td>
-            <td> song_num </td>
-            <td> Edit </td>
-            <td> Delete </td>
-        </tr>
-    </table>
-    {% for album in albums %}
-    <table border="1" cellspacing="0" width="40%">
-    <tr>    
-        <td>{{ album.album_name }}</td>
-        <td>{{ album.year }}</td>
-        <td>{{ album.singer_name }}</td>
-        <td>{{ album.song_num }}</td>
-        <td> <a class="btn" href="{{ url_for('EditAlbum', album_name=album.album_name) }}">Edit</a></td>
-        <td>
-            <form class="inline-form" method="post" action="{{ url_for('DeleteAlbum', album_name=album.album_name) }}">
-                <input class="btn" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
-            </form>
-        </td>
-    </tr>
-    </table>
+        nav li {
+            float: left;
+        }
+
+        nav li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        a.active {
+            background-color:dodgerblue;
+            color: white;
+        }
+        nav li a:hover {
+            background-color: #111;
+        }
+    
+    </style>
+</head>
+
+<body>
+    {% for message in get_flashed_messages() %}
+    <div class="alert">{{ message }}</div>
     {% endfor %}
-</ul>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">音乐</a></li>
+            <li><a href="{{ url_for('SingerPage') }}">歌手</a></li>
+            <li><a class = "active"href="{{ url_for('AlbumPage') }}">专辑</a></li>
+            <li><a href="{{ url_for('UserPage') }}">用户</a></li>
+        </ul>
+    </nav>
+    <!--
+    <a class="btn" href="{{ url_for('SearchAlbum') }}">搜索专辑</a>
+    -->
+    <div style="float: left;">
+    <form class="form-inline" method="post" action="{{url_for('SearchAlbum')}}">
+        专辑名:<input type="text" class="form-control" name="album_name">
+        <input type="submit" class = "btn btn-primary" name="search" value="搜索">
+    </form>
+    </div>
+    <div  style="float: right;">
+    <form method="post">
+        专辑名 <input type="text" name="album_name" autocomplete="off" required>
+        发行年 <input type="text" name="year" autocomplete="off" required>
+        歌曲数量 <input type="text" name="song_num" autocomplete="off" required>
+        歌手 <input type="text" name="singer_name" autocomplete="off" required>
+        <input class="btn btn-primary" type="submit" name="submit" value="添加">
+    </form>
+</div>
+    <ul>
+        {% for album in albums %}
+        <div class="box">
+            <img src="{{ url_for('static', filename=album.album_fig) }}" alt=album.album_name width="300" height="300">
+            <br />
+            专辑名:{{album.album_name}}
+            <br />
+            发行年份:{{album.year}}
+            <br />
+            歌手:{{ album.singer_name }}
+            <br />
+            歌曲数目:{{ album.song_num }}
+            <br />
+            <a class="btn btn-default btn-xs" href="{{ url_for('EditAlbum', album_name=album.album_name) }}">
+                <span class="glyphicon glyphicon-pencil">编辑</span></a>
+            </a>
+            <br />
+            <form class="inline-form" method="post" action="{{ url_for('DeleteAlbum', album_name=album.album_name) }}">
+                <input class="btn btn-default btn-xs" type="submit" name="delete" value="删除" onclick="return confirm('Are you sure?')">
+            </form>
+        </div>
+        {% endfor %}
+    </ul>
+</body>
 
-<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
-{% endblock %}
+</html>

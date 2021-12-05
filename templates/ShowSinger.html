@@ -1,27 +1,96 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        #song {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 80%;
+            align-items: center;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            top: 0;
+            width: 100%;
+        }
 
-<table border="1" width="500">
-    <tr>
-        <td>{{ singer.singer_name }}</td>
-        <td>{{ singer.gender }}</td>
-        <td>{{ singer.language }}</td>
-    </tr>
-</table>
-    
-<ul class="singer-list">
-    
-    <P>{{ singer.singer_name }} 的歌</P>
-    {% for song in songs %}
-    <table border="1" cellspacing="0" width="40%">
-    <tr>    
-        <td>{{ song.song_name }}</td>
-        <td>{{ song.type }}</td>
-    </tr>
-    </table>
+        nav li {
+            float: left;
+        }
+
+        a.active {
+            background-color:dodgerblue;
+            color: white;
+        }
+        nav li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav li a:hover {
+            background-color: #111;
+        }
+        .box{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    {% for message in get_flashed_messages() %}
+        <div class="alert">{{ message }}</div>
     {% endfor %}
-</ul>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">音乐</a></li>
+            <li><a  class = "active" href="{{ url_for('SingerPage') }}">歌手</a></li>
+            <li><a href="{{ url_for('AlbumPage') }}">专辑</a></li>
+            <li><a href="{{ url_for('UserPage') }}">用户</a></li>
+        </ul>
+    </nav>
 
-<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
-{% endblock %}
+    <div class='box'>
+        <div class = "figure">
+            <img src="{{ url_for('static', filename=singer.singer_fig) }}" class="img-circle" height="200" width="200">
+            <h1>{{singer.singer_name}}</h1>
+        </div>
+    </div>
+
+    <center>
+    <h3>热门歌曲</h3>
+    <table id = "song">
+        <tr>    
+            <td><div> 歌曲 </div></td>
+            <td> 类型 </td>
+        </tr>
+        {% for song in songs %}
+        <tr>
+            <td>
+                <div>
+                    <img alt="Walking Totoro" display="block" height=40px width=40px
+                        src="{{ url_for('static', filename=song.song_fig) }}" title="to~to~ro~">
+                    <a href="{{song.url}}" target="_blank" title="Find this music on wy">{{ song.song_name }}</a>
+                </div>
+            </td>
+            <td>{{ song.type }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </center>
+</body>
+
+</html>

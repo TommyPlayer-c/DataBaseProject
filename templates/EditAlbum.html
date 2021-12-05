@@ -1,12 +1,87 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
-<h3>Edit item</h3>
+<head>
+
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            top: 0;
+            width: 100%;
+        }
+
+        nav li {
+            float: left;
+        }
+
+        nav li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        a.active {
+            background-color:dodgerblue;
+            color: white;
+        }
+        nav li a:hover {
+            background-color: #111;
+        }
+
+        #song {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 80%;
+        }
+
+        #song tr.treven {
+            background-color: #FAFAFA;
+        }
+
+        #song tr.trodd {
+            background-color: #FFFFFF;
+        }
+
+        #song tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        a {
+            text-decoration: none
+        }
+    </style>
+</head>
+<body>
+    {% for message in get_flashed_messages() %}
+    <div class="alert">{{ message }}</div>
+    {% endfor %}
+    <nav>
+        <ul>
+            <li><a  href="{{ url_for('index') }}">音乐</a></li>
+            <li><a href="{{ url_for('SingerPage') }}">歌手</a></li>
+            <li><a class = "active" href="{{ url_for('AlbumPage') }}">专辑</a></li>
+            <li><a href="{{ url_for('UserPage') }}">用户</a></li>
+        </ul>
+    </nav>
+<h3>编辑专辑</h3>
 <form method="post">
     专辑名 <input type="text" name="album_name" autocomplete="off" required value="{{ album.album_name}}">
     发行年 <input type="text" name="year" autocomplete="off" required value="{{ album.year }}">
     歌曲数 <input type="text" name="song_num" autocomplete="off" required value="{{ album.song_num }}">
     歌手 <input type="text" name="singer_name" autocomplete="off" required value="{{ album.singer_name }}">
-    <input class="btn" type="submit" name="submit" value="Update">
+    <input class="btn btn-primary" type="submit" name="submit" value="更新">
 </form>
-{% endblock %}
+</body>
+
+</html>

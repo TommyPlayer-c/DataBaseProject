@@ -1,42 +1,165 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
-<p>{{ musics|length }} Titles</p>
-<a class="btn" href="{{ url_for('SearchMusic') }}">搜索歌曲</a>
-<p> 下面是音乐列表。注意添加音乐时，必须有对应的歌手！类型有外键限制，只能是：流行，嘻哈说唱，民谣，摇滚，古风，二次元。</p>
+<head>
 
-<form method="post">
-    歌曲名 <input type="text" name="song_name" autocomplete="off" required>
-    类型 <input type="text" name="type" autocomplete="off" required>
-    歌手 <input type="text" name="singer_name" autocomplete="off" required>
-    <input class="btn" type="submit" name="submit" value="Add">
-</form>
-<ul class="music-list">
-    <table border="1" cellspacing="0" width="40%">
-        <tr>    
-            <td> song_name </td>
-            <td> type </td>
-            <td> singer </td>
-            <td> Edit </td>
-            <td> Delete </td>
-        </tr>
-    </table>
-    {% for music in musics %}
-    <table border="1" cellspacing="0" width="40%">
-    <tr>
-        <td><a class="wy" href="{{music.url}}" target="_blank" title="Find this music on wy">{{ music.song_name }}</a></td>
-        <td>{{ music.type }}</td>
-        <td> <a class="btn" href="{{ url_for('ShowSinger', singer_name=music.singer_name) }}">{{ music.singer_name }}</a> </td>
-        <td> <a class="btn" href="{{ url_for('EditMusic', music_id=music.id) }}">Edit</a></td>
-        <td>
-            <form class="inline-form" method="post" action="{{ url_for('DeleteMusic', music_id=music.id) }}">
-                <input class="btn" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
-            </form>
-        </td>
-    </tr>
-    </table>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            top: 0;
+            width: 100%;
+        }
+
+        nav li {
+            float: left;
+        }
+
+        nav li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav li a:hover {
+            background-color: #111;
+        }
+
+        a.active {
+            background-color:dodgerblue;
+            color: white;
+        }
+        #song {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 80%;
+        }
+
+        #song tr.treven {
+            background-color: #FAFAFA;
+        }
+
+        #song tr.trodd {
+            background-color: #FFFFFF;
+        }
+
+        #song tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        a {
+            text-decoration: none
+        }
+    </style>
+</head>
+
+<body>
+    {% for message in get_flashed_messages() %}
+    <div class="alert">{{ message }}</div>
     {% endfor %}
-</ul>
+    <nav>
+        <ul>
+            <li><a  class = "active" href="{{ url_for('index') }}">音乐</a></li>
+            <li><a href="{{ url_for('SingerPage') }}">歌手</a></li>
+            <li><a href="{{ url_for('AlbumPage') }}">专辑</a></li>
+            <li><a href="{{ url_for('UserPage') }}">用户</a></li>
+        </ul>
+    </nav>
 
-<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
-{% endblock %}
+    <div style="float: left;">
+        <form class="form-inline" method="post" action="{{url_for('SearchMusic')}}">
+            <input type="text" class="form-control" name="song_name" placeholder="请输入歌曲名称">
+            <input type="submit" class="btn btn-primary" name="search" value="搜索">
+        </form>
+    </div>
+    <div style="float: right;">
+        <form method="post" action="{{url_for('AddMusic')}}">
+            歌曲名 <input type="text" name="song_name">
+            类型 <input type="text" name="type">
+            歌手 <input type="text" name="singer_name">
+            <input class="btn btn-primary" type="submit" name="submit" value="添加">
+        </form>
+    </div>
+    </br>
+    </br>
+    <center>
+        <ul>
+            <table id="song" ,frame=void>
+                <tr>
+                    <td>
+                         歌曲 
+                    </td>
+                    <td> 类型 </td>
+                    <td> 歌手 </td>
+                    <td> 操作 </td>
+                </tr>
+                {% for music in musics %}
+                {%if music.id % 2 == 0%}
+                <tr class='treven'>
+                    <td>
+                        <div>
+                            <img alt="Walking Totoro" display="block" height=40px width=40px
+                                src="{{ url_for('static', filename=music.song_fig) }}" title="to~to~ro~">
+                            <a href="{{music.url}}" target="_blank" title="Find this music on wy">{{ music.song_name
+                                }}</a>
+                        </div>
+                    </td>
+                    <td>{{ music.type }}</td>
+                    <td> {{ music.singer_name }}</a> </td>
+                    <td>
+                        <div style="display: inline-block;">
+                            <a class="btn btn-primary" href="{{ url_for('EditMusic', music_id=music.id) }}"><span
+                                    class="glyphicon glyphicon-pencil">编辑</span></a>
+                        </div>
+                        <div style="display: inline-block;">
+                            <form method="post" action="{{ url_for('DeleteMusic', music_id=music.id) }}">
+                                <input type="submit" class="btn btn-danger" name="delete" value="删除"
+                                    onclick="return confirm('Are you sure?')">
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {%else%}
+                <tr class='trodd'>
+                    <td>
+                        <div>
+                            <img alt="Walking Totoro" display="block" height=40px width=40px
+                                src="{{ url_for('static', filename=music.song_fig) }}" title="to~to~ro~">
+                            <a href="{{music.url}}" target="_blank" title="Find this music on wy">{{ music.song_name
+                                }}</a>
+                        </div>
+                    </td>
+                    <td>{{ music.type }}</td>
+                    <td> {{ music.singer_name }}</a> </td>
+                    <td>
+                        <div style="display: inline-block;">
+                            <a class='btn btn-primary' href="{{ url_for('EditMusic', music_id=music.id) }}"><span
+                                    class="glyphicon glyphicon-pencil">编辑</span></a>
+                        </div>
+                        <div style="display: inline-block;">
+                            <form method="post" action="{{ url_for('DeleteMusic', music_id=music.id) }}">
+                                <input type="submit" class="btn btn-danger" name="delete" value="删除"
+                                    onclick="return confirm('Are you sure?')">
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {%endif%}
+                {% endfor %}
+            </table>
+        </ul>
+    </center>
+</body>
+
+</html>

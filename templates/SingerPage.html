@@ -1,42 +1,97 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
-<p>{{ singers|length }} Titles</p>
-<a class="btn" href="{{ url_for('SearchSinger') }}">搜索歌手</a>
-<p> 下面是歌手信息，注意 language 有外键限制，只能是：华语，欧美，日本，韩语。 </p>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        .box{
+            float: left;
+            width: 20%;
+            text-align: center;
+            border: 1000px aliceblue;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            top: 0;
+            width: 100%;
+        }
 
-<form method="post">
-    歌手名 <input type="text" name="singer_name" autocomplete="off" required>
-    性别 <input type="text" name="gender" autocomplete="off" required>
-    语言 <input type="text" name="language" autocomplete="off" required>
-    <input class="btn" type="submit" name="submit" value="Add">
-</form>
+        nav li {
+            float: left;
+        }
 
-<ul class="singer-list">
-    <table border="1" cellspacing="0" width="40%">
-        <tr>    
-            <td> singer_name </td>
-            <td> gender </td>
-            <td> language </td>
-            <td> delete </td>
-        </tr>
-    </table>
-    {% for singer in singers %}
-    <table border="1" cellspacing="0" width="40%">
-    <tr>    
-        <td><a class="btn" href="{{ url_for('ShowSinger', singer_name=singer.singer_name) }}">{{ singer.singer_name }}</a></td>
-        <td>{{ singer.gender }}</td>
-        <td>{{ singer.language }}</td>
-        <td> <a class="btn" href="{{ url_for('EditSinger', singer_name=singer.singer_name) }}">Edit</a></td>
-        <td>
-            <form class="inline-form" method="post" action="{{ url_for('DeleteSinger', singer_name=singer.singer_name) }}">
-                <input class="btn" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
-            </form>
-        </td>
-    </tr>
-    </table>
+        a.active {
+            background-color:dodgerblue;
+            color: white;
+        }
+        nav li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav li a:hover {
+            background-color: #111;
+        }
+    </style>
+</head>
+
+<body>
+    {% for message in get_flashed_messages() %}
+    <div class="alert">{{ message }}</div>
     {% endfor %}
-</ul>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">音乐</a></li>
+            <li><a class = "active" href="{{ url_for('SingerPage') }}">歌手</a></li>
+            <li><a href="{{ url_for('AlbumPage') }}">专辑</a></li>
+            <li><a href="{{ url_for('UserPage') }}">用户</a></li>
+        </ul>
+    </nav>
 
-<img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
-{% endblock %}
+    <form class="form-inline" method="post" action="{{url_for('FilterSinger')}}">
+        地区:<input type="text" class="form-control" name="area" placeholder="华语,欧美,韩语,日本">
+        类型:<input type="text" class="form-control" name="singer_sex" placeholder="男,女,组合">
+        <input type="submit" class = "btn btn-primary" name="search" value="筛选">
+    </form>
+    
+    <!-- <a class="btn" href="{{ url_for('SearchSinger') }}">搜索歌手</a> -->
+    <form method="post">
+        歌手名 <input type="text" name="singer_name" autocomplete="off" required>
+        性别 <input type="text" name="gender" autocomplete="off" required>
+        语言 <input type="text" name="language" autocomplete="off" required>
+        <input class="btn" type="submit" name="submit" value="Add">
+    </form>
+
+    {% for singer in singers %}
+    <div class='box'>
+        <img src="{{ url_for('static', filename=singer.singer_fig) }}" class="img-circle" height="150" width="150">
+        <br />
+        <a href="{{ url_for('ShowSinger', singer_name=singer.singer_name) }}">{{ singer.singer_name }}</a>
+        <br />
+        <a class="btn btn-xs btn-default" href="{{ url_for('EditSinger', singer_name=singer.singer_name) }}"><span
+            class="glyphicon glyphicon-pencil">编辑</span></a>
+        <br />
+        <form class="inline-form" method="post"
+            action="{{ url_for('DeleteSinger', singer_name=singer.singer_name) }}">
+            <input class="btn btn-xs btn-default" type="submit" name="delete" value="删除"
+                onclick="return confirm('Are you sure?')">
+        </form>
+        
+    </div>
+    {% endfor %}
+</body>
+
+</html>

@@ -1,39 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            top: 0;
+            width: 100%;
+        }
+
+        nav li {
+            float: left;
+        }
+
+        nav li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav li a:hover {
+            background-color: #111;
+        }
+    </style>
     {% block head %}
     <meta charset="utf-8">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="bootstrap-3.4.1-dist/js/bootstrap.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STY Music list</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css"> -->
     {% endblock %}
 </head>
 <body>
     {% for message in get_flashed_messages() %}
         <div class="alert">{{ message }}</div>
     {% endfor %}
-    <h2>
-        <img alt="Avatar" class="avatar" src="{{ url_for('static', filename='images/avatar.png') }}">
-        STY's Music list
-    </h2>
     <nav>
         <ul>
             <li><a href="{{ url_for('index') }}">Music</a></li>
-        </ul>
-        <ul>
             <li><a href="{{ url_for('SingerPage') }}">Singer</a></li>
-        </ul>
-        <ul>
             <li><a href="{{ url_for('AlbumPage') }}">Album</a></li>
-        </ul>
-        <ul>
             <li><a href="{{ url_for('UserPage') }}">User</a></li>
         </ul>
     </nav>
     {% block content %}{% endblock %}
-    <footer>
-        <small>&copy; 2021 <a href="http://helloflask.com/tutorial">Tommy</a></small>
-	</footer>
 </body>
 </html>

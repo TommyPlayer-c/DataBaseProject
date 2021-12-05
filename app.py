@@ -6,17 +6,15 @@ import click
 from flask import Flask, render_template, request, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
-
+from sqlalchemy import and_
 app = Flask(__name__)
-app.debug = True
+app.config['SECRET_KEY'] = 'dev'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost:3306/music'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
 # 在扩展类实例化前加载配置
 db = SQLAlchemy(app)
 
-###########################################################################
-#                       下面为自定义命令                                   #
-###########################################################################
+
 @app.cli.command()
 @click.option('--drop', is_flag=True, help='Create after drop.')
 def initdb(drop):
@@ -47,13 +45,15 @@ def forge():
 
     singerDF = pd.read_csv("./data/singer.csv", dtype=str)
     for row in singerDF.itertuples():
-        singer = Singer(singer_name=row[1], gender=row[2] ,language=row[3], singer_fig=row[4])
+        singer = Singer(
+            singer_name=row[1], gender=row[2], language=row[3], singer_fig=row[4])
         db.session.add(singer)
     db.session.commit()
 
     musicsDF = pd.read_csv("./data/song.csv", dtype=str)
     for row in musicsDF.itertuples():
-        music = Music(song_name=row[2], type=row[3], singer_name=row[4], url=row[5], song_fig=row[6])
+        music = Music(song_name=row[2], type=row[3],
+                      singer_name=row[4], url=row[5], song_fig=row[6])
         db.session.add(music)
     db.session.commit()
 
@@ -65,7 +65,8 @@ def forge():
 
     albumDF = pd.read_csv("./data/album.csv", dtype=str)
     for row in albumDF.itertuples():
-        alb = Album(album_name=row[1], year=row[2], song_num=row[3], singer_name=row[4], album_fig=row[5])
+        alb = Album(album_name=row[1], year=row[2],
+                    song_num=row[3], singer_name=row[4], album_fig=row[5])
         db.session.add(alb)
     db.session.commit()
 
@@ -74,58 +75,67 @@ def forge():
 ###########################################################################
 #                       下面为数据库模型类                                  #
 ###########################################################################
+
+
 class Music(db.Model):
     __tablename__ = 'music'
 
     id = db.Column(db.Integer, primary_key=True)
     song_name = db.Column(db.String(50))
-    type = db.Column(db.String(20), db.ForeignKey("type.type_name", ondelete='CASCADE'))
-    singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name", ondelete='CASCADE'))
+    type = db.Column(db.String(20), db.ForeignKey(
+        "type.type_name", ondelete='CASCADE'))
+    singer_name = db.Column(db.String(50), db.ForeignKey(
+        "singer.singer_name", ondelete='CASCADE'))
     url = db.Column(db.String(100))
     song_fig = db.Column(db.String(50))
 
 
 class Singer(db.Model):
     __tablename__ = 'singer'
-        
+
     singer_name = db.Column(db.String(50), primary_key=True)
     gender = db.Column(db.String(20))
-    language = db.Column(db.String(30), db.ForeignKey("language.language_name", ondelete='CASCADE'))
-    singer_song = db.relationship('Music', backref='Singer', cascade='all, delete-orphan', passive_deletes = True)
-    singer_album = db.relationship('Album', backref='Singer', cascade='all, delete-orphan', passive_deletes = True)
+    language = db.Column(db.String(30), db.ForeignKey(
+        "language.language_name", ondelete='CASCADE'))
+    singer_song = db.relationship(
+        'Music', backref='Singer', cascade='all, delete-orphan', passive_deletes=True)
+    singer_album = db.relationship(
+        'Album', backref='Singer', cascade='all, delete-orphan', passive_deletes=True)
     singer_fig = db.Column(db.String(50))
 
 
 class Type(db.Model):
     __tablename__ = 'type'
-        
+
     type_name = db.Column(db.String(20), primary_key=True)
     popular_rate = db.Column(db.Float)
 
 
 class Language(db.Model):
     __tablename__ = 'language'
-        
+
     language_name = db.Column(db.String(30), primary_key=True)
     area = db.Column(db.String(20))
 
 
 class User(db.Model):
     __tablename__ = 'user'
-    
+
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(50))
     user_gender = db.Column(db.String(20))
-    type = db.Column(db.String(20), db.ForeignKey("type.type_name", ondelete='CASCADE'))
+    type = db.Column(db.String(20), db.ForeignKey(
+        "type.type_name", ondelete='CASCADE'))
 
 
 class Album(db.Model):
     __tablename__ = 'album'
-    
+
     album_name = db.Column(db.String(50), primary_key=True)
     year = db.Column(db.Integer)
     song_num = db.Column(db.Integer)
-    singer_name = db.Column(db.String(50), db.ForeignKey("singer.singer_name", ondelete='CASCADE'))
+    singer_name = db.Column(db.String(50), db.ForeignKey(
+        "singer.singer_name", ondelete='CASCADE'))
     album_fig = db.Column(db.String(50))
 
 
@@ -144,19 +154,19 @@ def index():
         type = request.form['type']
         singer_name = request.form['singer_name']
 
-        typeResult = Type.query.filter(Type.type_name==type)
-        singerResult = Singer.query.filter(Singer.singer_name==singer_name)
+        typeResult = Type.query.filter(Type.type_name == type)
+        singerResult = Singer.query.filter(Singer.singer_name == singer_name)
         if typeResult.count() == 0 or singerResult.count() == 0:
-            flash('Invalid input.')
+            flash('index:Invalid input.')
             return redirect(url_for('index'))
 
-        music = Music(song_name=song_name, type=type, singer_name=singer_name)
+        music = Music(song_name=song_name, type=type, singer_name=singer_name, song_fig='images/song/01.jpg')
         db.session.add(music)
         db.session.commit()
         flash('增加成功！')
         return redirect(url_for('index'))
 
-    musics = Music.query.order_by(Music.singer_name).all()
+    musics = Music.query.order_by(Music.id).all()
     return render_template('index.html', musics=musics)
 
 
@@ -167,12 +177,14 @@ def SingerPage():
         gender = request.form['gender']
         language = request.form['language']
 
-        languageResult = Language.query.filter(Language.language_name==language)
+        languageResult = Language.query.filter(
+            Language.language_name == language)
         if languageResult.count() == 0:
-            flash('Invalid input.')
+            flash('singerpage:Invalid input.')
             return redirect(url_for('SingerPage'))
 
-        singer = Singer(singer_name=singer_name, gender=gender, language=language)
+        singer = Singer(singer_name=singer_name,
+                        gender=gender, language=language, singer_fig='images/singer/01.jpg')
         db.session.add(singer)
         db.session.commit()
         flash('增加成功！')
@@ -196,12 +208,13 @@ def AlbumPage():
         song_num = request.form['song_num']
         singer_name = request.form['singer_name']
 
-        singerResult = Singer.query.filter(Singer.singer_name==singer_name)
+        singerResult = Singer.query.filter(Singer.singer_name == singer_name)
         if singerResult.count() == 0:
-            flash('Invalid input.')
+            flash('albumpage:Invalid input.')
             return redirect(url_for('AlbumPage'))
 
-        album = Album(album_name=album_name, year=year, song_num=song_num, singer_name=singer_name)
+        album = Album(album_name=album_name, year=year,
+                      song_num=song_num, singer_name=singer_name, album_fig='images/album/01.jpg')
         db.session.add(album)
         db.session.commit()
         flash('增加成功！')
@@ -211,7 +224,7 @@ def AlbumPage():
     return render_template('AlbumPage.html', albums=albums)
 
 
-@app.route('/music/edit/<int:music_id>', methods=['GET', 'POST'])
+@app.route('/edit/music/<int:music_id>', methods=['GET', 'POST'])
 def EditMusic(music_id):
     music = Music.query.get_or_404(music_id)
 
@@ -245,13 +258,14 @@ def EditSinger(singer_name):
         gender = request.form['gender']
         language = request.form['language']
 
-        languageResult = Language.query.filter(Language.language_name==language)
+        languageResult = Language.query.filter(
+            Language.language_name == language)
         if languageResult.count() == 0:
-            flash('非法修改')
+            flash('editsinger:非法修改')
             return redirect(url_for('SingerPage'))
 
         singer.singer_name = singer_name
-        singer.gender = gender   
+        singer.gender = gender
         singer.language = language
         db.session.commit()
         flash('更新成功！')
@@ -270,13 +284,13 @@ def EditAlbum(album_name):
         song_num = request.form['song_num']
         singer_name = request.form['singer_name']
 
-        singerResult = Singer.query.filter(Singer.singer_name==singer_name)
+        singerResult = Singer.query.filter(Singer.singer_name == singer_name)
         if singerResult.count() == 0:
-            flash('非法修改')
+            flash('editalbum:非法修改')
             return redirect(url_for('AlbumPage'))
 
         album.album_name = album_name
-        album.year = year   
+        album.year = year
         album.song_num = song_num
         album.singer_name = singer_name
         db.session.commit()
@@ -320,20 +334,40 @@ def DeleteAlbum(album_name):
 def SearchMusic():
     if request.method == 'POST':
         song_name = request.form['song_name']
-        music_item = Music.query.filter(Music.song_name==song_name).first()     # 获取对象要使用first函数！
+        music_item = Music.query.filter(
+            Music.song_name == song_name).first()     # 获取对象要使用first函数！
         if music_item == None:
             flash('没有找到！')
             return redirect(url_for('SearchMusic'))
         # return "查询成功!<br>歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
         return render_template('SearchMusic.html', music=music_item)
-    return render_template('SearchMusic.html', music=None)
+    return render_template('index.html', music=None)
+
+
+@app.route('/music/Add/', methods=['POST'])
+def AddMusic():
+    song_name = request.form['song_name']
+    type = request.form['type']
+    singer_name = request.form['singer_name']
+
+    typeResult = Type.query.filter(Type.type_name == type)
+    singerResult = Singer.query.filter(Singer.singer_name == singer_name)
+    if typeResult.count() == 0 or singerResult.count() == 0:
+        flash('Invalid input.')
+        return redirect(url_for('index'))
+    music = Music(song_name=song_name, type=type, singer_name=singer_name, song_fig='images/song/01.jpg')
+    db.session.add(music)
+    db.session.commit()
+    flash('增加成功！')
+    return redirect(url_for('index'))
 
 
 @app.route('/singer/search/', methods=['GET', 'POST'])
 def SearchSinger():
     if request.method == 'POST':
         singer_name = request.form['singer_name']
-        singer_item = Singer.query.filter(Singer.singer_name==singer_name).first()     # 获取对象要使用first函数！
+        singer_item = Singer.query.filter(
+            Singer.singer_name == singer_name).first()     # 获取对象要使用first函数！
         if singer_item == None:
             flash('没有找到！')
             return redirect(url_for('SearchSinger'))
@@ -342,35 +376,33 @@ def SearchSinger():
     return render_template('SearchSinger.html', singer=None)
 
 
+@app.route('/singer/filter/', methods=['POST'])
+def FilterSinger():
+    singer_sex = request.form['singer_sex']
+    singer_area = request.form['area']
+    singer_list = Singer.query.filter(
+        and_(Singer.gender == singer_sex, Singer.language == singer_area)).all()
+    return render_template('SingerPage.html', singers=singer_list)
+
+
 @app.route('/album/search/', methods=['GET', 'POST'])
 def SearchAlbum():
     if request.method == 'POST':
         album_name = request.form['album_name']
-        # year = int(request.form['year'])
-        # singer_name = request.form['singer_name']
+        album = Album.query.filter(Album.album_name == album_name).all()
 
-        # albums = []
-        # if album_name != None:
-        #     # filterList.append(Album.album_name == album_name)
-        #     albums = Album.query.filter(Album.album_name == album_name).first()
-        # elif year != None:
-        #     # filterList.append(Album.year == year)
-        #     albums = Album.query.filter(Album.year == year).first()
-        # else:
-        #     # filterList.append(Album.singer_name == singer_name)
-        album = Album.query.filter(Album.album_name == album_name).first()
-        
         if album == None:
             flash('没有找到！')
-            return redirect(url_for('SearchAlbum'))
-        return render_template('SearchAlbum.html', album=album)
-    return render_template('SearchAlbum.html', album=None)
+            return redirect(url_for('AlbumPage'))
+        return render_template('AlbumPage.html', albums=album)
+    return render_template('AlbumPage.html', albums=None)
 
 
+# route()装饰器用于将URL绑定到函数
 @app.route('/ShowSinger/<string:singer_name>', methods=['GET', 'POST'])
 def ShowSinger(singer_name):
     singer = Singer.query.get_or_404(singer_name)
-    songs = Music.query.filter(Music.singer_name==singer_name)
+    songs = Music.query.filter(Music.singer_name == singer_name)
     return render_template('ShowSinger.html', singer=singer, songs=songs)
 
 
