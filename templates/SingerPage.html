@@ -62,6 +62,7 @@
     </nav>
 
     <form class="form-inline" method="post" action="{{url_for('FilterSinger')}}">
+        名字:<input type="text" class="form-control" name="singer_name">
         地区:<input type="text" class="form-control" name="area" placeholder="华语,欧美,韩语,日本">
         类型:<input type="text" class="form-control" name="singer_sex" placeholder="男,女,组合">
         <input type="submit" class = "btn btn-primary" name="search" value="筛选">

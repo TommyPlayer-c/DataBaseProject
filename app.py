@@ -378,10 +378,11 @@ def SearchSinger():
 
 @app.route('/singer/filter/', methods=['POST'])
 def FilterSinger():
+    singer_name = request.form['singer_name']
     singer_sex = request.form['singer_sex']
     singer_area = request.form['area']
     singer_list = Singer.query.filter(
-        and_(Singer.gender == singer_sex, Singer.language == singer_area)).all()
+        and_(Singer.singer_name == singer_name, Singer.gender == singer_sex, Singer.language == singer_area)).all()
     return render_template('SingerPage.html', singers=singer_list)
 
 
