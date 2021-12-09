@@ -398,6 +398,9 @@ def FilterSinger():
         singer_list = singer_list.filter(Singer.language == singer_area)
     
     singer_list = singer_list.all()
+    if singer_list == None:
+        flash('没有找到！')
+        return redirect(url_for('SingerPage'))
     return render_template('SingerPage.html', singers=singer_list)
 
 
@@ -405,12 +408,23 @@ def FilterSinger():
 def SearchAlbum():
     if request.method == 'POST':
         album_name = request.form['album_name']
-        album = Album.query.filter(Album.album_name == album_name).all()
-
-        if album == None:
+        year = request.form['year']
+        singer_name = request.form['singer_name']
+        # album = Album.query.filter(Album.album_name == album_name).all()
+        
+        album_list = db.session.query(Album)
+        if album_name:
+            album_list = album_list.filter(Album.album_name == album_name)
+        if year:
+            album_list = album_list.filter(Album.year == year)
+        if singer_name:
+            album_list = album_list.filter(Album.singer_name == singer_name)
+    
+        album_list = album_list.all()
+        if album_list == None:
             flash('没有找到！')
             return redirect(url_for('AlbumPage'))
-        return render_template('AlbumPage.html', albums=album)
+        return render_template('AlbumPage.html', albums=album_list)
     return render_template('AlbumPage.html', albums=None)
 
 
