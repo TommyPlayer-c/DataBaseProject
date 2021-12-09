@@ -14,7 +14,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的
 # 在扩展类实例化前加载配置
 db = SQLAlchemy(app)
 
-
+###########################################################################
+#                       下面为自定义命令                                    #
+###########################################################################
 @app.cli.command()
 @click.option('--drop', is_flag=True, help='Create after drop.')
 def initdb(drop):
@@ -43,10 +45,10 @@ def forge():
         db.session.add(typerow)
     db.session.commit()
 
-    singerDF = pd.read_csv("./data/singer.csv", dtype=str)
+    singerDF = pd.read_csv("./data/singer2.csv", dtype=str) # 这里添加了生日、星座
     for row in singerDF.itertuples():
         singer = Singer(
-            singer_name=row[1], gender=row[2], language=row[3], singer_fig=row[4])
+            singer_name=row[1], gender=row[2], birthday=row[3], constellation=row[4], language=row[5], singer_fig=row[6])
         db.session.add(singer)
     db.session.commit()
 
@@ -102,6 +104,8 @@ class Singer(db.Model):
     singer_album = db.relationship(
         'Album', backref='Singer', cascade='all, delete-orphan', passive_deletes=True)
     singer_fig = db.Column(db.String(50))
+    birthday = db.Column(db.String(20))
+    constellation = db.Column(db.String(20))
 
 
 class Type(db.Model):
