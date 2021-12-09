@@ -3,10 +3,11 @@ import sys
 
 
 import click
-from flask import Flask, render_template, request, url_for, redirect, flash
+from flask import Flask, render_template, request, url_for, redirect, flash, session
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 from sqlalchemy import and_
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost:3306/music'
@@ -385,8 +386,18 @@ def FilterSinger():
     singer_name = request.form['singer_name']
     singer_sex = request.form['singer_sex']
     singer_area = request.form['area']
-    singer_list = Singer.query.filter(
-        and_(Singer.singer_name == singer_name, Singer.gender == singer_sex, Singer.language == singer_area)).all()
+
+    # singer_list = Singer.query.filter(
+    #     and_(Singer.singer_name == singer_name, Singer.gender == singer_sex, Singer.language == singer_area)).all()
+    singer_list = db.session.query(Singer)
+    if singer_name:
+        singer_list = singer_list.filter(Singer.singer_name == singer_name)
+    if singer_sex:
+        singer_list = singer_list.filter(Singer.gender == singer_sex)
+    if singer_area:
+        singer_list = singer_list.filter(Singer.language == singer_area)
+    
+    singer_list = singer_list.all()
     return render_template('SingerPage.html', singers=singer_list)
 
 
