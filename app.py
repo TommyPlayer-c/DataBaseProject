@@ -339,14 +339,25 @@ def DeleteAlbum(album_name):
 def SearchMusic():
     if request.method == 'POST':
         song_name = request.form['song_name']
-        music_item = Music.query.filter(
-            Music.song_name == song_name).first()     # 获取对象要使用first函数！
-        if music_item == None:
+        type = request.form['type']
+        singer_name = request.form['singer_name']
+
+        # music_item = Music.query.filter(
+        #     Music.song_name == song_name)
+        music_list = db.session.query(Music)
+        if song_name:
+            music_list = music_list.filter(Music.song_name == song_name)
+        if type:
+            music_list = music_list.filter(Music.type == type)
+        if singer_name:
+            music_list = music_list.filter(Music.singer_name == singer_name)
+    
+        music_list = music_list.all()
+        if music_list == None:
             flash('没有找到！')
-            return redirect(url_for('SearchMusic'))
-        # return "查询成功!<br>歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
-        return render_template('SearchMusic.html', music=music_item)
-    return render_template('index.html', music=None)
+            return redirect(url_for('index.html'))
+        return render_template('index.html', musics=music_list)
+    return render_template('index.html', musics=None)
 
 
 @app.route('/music/Add/', methods=['POST'])
@@ -367,18 +378,18 @@ def AddMusic():
     return redirect(url_for('index'))
 
 
-@app.route('/singer/search/', methods=['GET', 'POST'])
-def SearchSinger():
-    if request.method == 'POST':
-        singer_name = request.form['singer_name']
-        singer_item = Singer.query.filter(
-            Singer.singer_name == singer_name).first()     # 获取对象要使用first函数！
-        if singer_item == None:
-            flash('没有找到！')
-            return redirect(url_for('SearchSinger'))
-        # return "查询成功!<br>歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
-        return render_template('SearchSinger.html', singer=singer_item)
-    return render_template('SearchSinger.html', singer=None)
+# @app.route('/singer/search/', methods=['GET', 'POST'])
+# def SearchSinger():
+#     if request.method == 'POST':
+#         singer_name = request.form['singer_name']
+#         singer_item = Singer.query.filter(
+#             Singer.singer_name == singer_name).first()     # 获取对象要使用first函数！
+#         if singer_item == None:
+#             flash('没有找到！')
+#             return redirect(url_for('SearchSinger'))
+#         # return "查询成功!<br>歌曲名：%s 歌手：%s 类型：%s" %(music_item.song_name, music_item.singer_name, music_item.type)
+#         return render_template('SearchSinger.html', singer=singer_item)
+#     return render_template('SearchSinger.html', singer=None)
 
 
 @app.route('/singer/filter/', methods=['POST'])

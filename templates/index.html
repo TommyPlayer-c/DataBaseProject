@@ -79,7 +79,9 @@
 
     <div style="float: left;">
         <form class="form-inline" method="post" action="{{url_for('SearchMusic')}}">
-            <input type="text" class="form-control" name="song_name" placeholder="请输入歌曲名称">
+            歌曲名称:<input type="text" class="form-control" name="song_name">
+            歌曲类型:<input type="text" class="form-control" name="type">
+            歌手名:<input type="text" class="form-control" name="singer_name">
             <input type="submit" class="btn btn-primary" name="search" value="搜索">
         </form>
     </div>
