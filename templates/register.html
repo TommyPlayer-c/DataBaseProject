@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+
+    <style type="text/css">
+        /*初始化属性*/
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url('/static/images/background.jpg');
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
+        .mainPart {
+            width: 1000px;
+            height: 500px;
+            margin: 90px auto auto;
+        }
+
+        .explain {
+            float: left;
+        }
+
+        .tableArea {
+            width: 500px;
+            height: 400px;
+            margin-left: 235px;
+            margin-top: 100px;
+        }
+
+        /*中间的div的表单区域设置*/
+        .tableData {
+            width: 400px;
+            height: 350px;
+            margin: auto;
+        }
+
+        /*设置fieldset*/
+        fieldset {
+            height: 396px;
+        }
+
+        /*设置表格*/
+        .dataTableLeft {
+            width: 80px;
+            text-align: right;
+        }
+
+        .dataTableRight {
+            padding-left: 20px;
+        }
+
+        /*设置输入框*/
+        #username,
+        #password,
+        #perName,
+        #phoneNumber,
+        #number,
+        #date,
+        #email {
+            border: 1px solid rgba(203, 197, 198, 0.03);
+            border-radius: 5px;
+            height: 27px;
+            width: 235px;
+            padding-left: 5px;
+        }
+
+        /*设置提交按钮*/
+        #sub {
+            width: 120px;
+            height: 40px;
+            background-color: rgba(84, 83, 87, 0.11);
+            border: 1px solid #faf7f7;
+            border-radius: 10px;
+            color: #deebff;
+        }
+
+        #picture{
+    	/*使用绝对定义取消其在页面中占据的位置*/
+        position: absolute;
+        /*让其他袁术覆盖于图片上方*/
+        z-index: -1;
+        /*图片透明度*/
+        opacity: 0.5;
+        width: 995px;
+        height:495px;
+        }
+        .subTd {
+            text-align: center;
+        }
+
+        /*单独设置验证码框*/
+        #number {
+            width: 100px;
+        }
+
+        /*单独设置验证码图片*/
+        #numberPicture {
+            /*设置垂直居中*/
+            vertical-align: middle;
+            width: 130px;
+            height: 35px;
+        }
+
+        /*单独设置性别选择框旁边的文字*/
+        .sex {
+            font-size: 18px;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class= "mainPart">
+    <img src="https://beiz.jp/images_P/white/white_00079.jpg" id="picture">
+    <div class="tableArea">
+
+        <form method="post" action="{{url_for('register')}}">
+
+            <fieldset>
+                <legend>新用户注册</legend>
+                <table class="tableData">
+                    <tr>
+                        <td class="dataTableLeft"><label>用户名</label></td>
+                        <td class="dataTableRight">
+                            <input type="text" placeholder="请输入用户名" id="username" name="username" required="required"
+                                min="3" max="8">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="dataTableLeft"><label>密码</label></td>
+                        <td class="dataTableRight"><input type="password" placeholder="请输入密码" id="password"
+                                name="password" required="required"></td>
+                    </tr>
+                    <tr>
+                        <td class="dataTableLeft"><label>性别</label></td>
+                        <td class="dataTableRight">
+                            <input type="radio" value="男" name="sex"><samp class="sex">男</samp>
+                            <input type="radio" value="女" name="sex"><samp class="sex">女</samp>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="dataTableLeft"><label>喜好</label></td>
+                        <td class="dataTableRight">
+                            <select id="sid" name="like" style="border: 1px solid rgba(203,197,198,0.03);
+                        border-radius: 5px;
+                        height: 27px;
+                        width:235px;
+                        padding-left: 5px;">
+                                <option>---请选择---</option>
+                                <option>流行</option>
+                                <option>嘻哈说唱</option>
+                                <option>民谣</option>
+                                <option>摇滚</option>
+                                <option>古风</option>
+                                <option>二次元</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <td class="dataTableLeft"><label>验证码</label></td>
+                        <td class="dataTableRight"><input type="text" placeholder="请输入验证码" id="number"
+                                required="required">
+                            <img src="../image/verCode.jpg" id="numberPicture">
+                        </td>
+                    </tr>
+                -->
+                    <tr>
+                        <td class="subTd">
+                            <a href="{{ url_for('login') }}" style="color:dodgerblue">我要登录</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="subTd" colspan="2">
+                            <input type="submit" value="注册" id="sub">
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </form>
+    </div>
+</div>
+</body>
+
+</html>

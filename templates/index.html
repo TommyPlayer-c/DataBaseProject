@@ -10,36 +10,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <style>
-        nav ul {
-            list-style-type: none;
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            background-color: #333;
-            top: 0;
+        }
+
+        .w {
             width: 100%;
+            margin: auto;
         }
 
-        nav li {
-            float: left;
+        li {
+            list-style: none;
         }
 
-        nav li a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
+        a {
             text-decoration: none;
         }
 
-        nav li a:hover {
-            background-color: #111;
+        .header {
+            height: 43px;
+            margin: 30px auto;
+            background-color: #333;
+            margin-top: 0px;
+        }
+
+        .logo {
+            float: left;
+            width: 198px;
+            height: 43px;
+            margin-left: 30px;
+        }
+
+        .nav2 {
+            float: left;
+            margin-left: 350px;
+        }
+
+        .nav2 ul li {
+            float: left;
+            margin: 0 15px;
+        }
+
+        .nav2 ul li a {
+            display: block;
+            height: 43px;
+            padding: 0 10px;
+            line-height: 43px;
+            color: white;
+        }
+
+        .nav2 ul li a:hover {
+            border-bottom: 2px solid #00a4ff;
         }
 
         a.active {
-            background-color:dodgerblue;
+            background-color: #00a4ff;
+        }
+
+        .user {
+            float: right;
+            margin-right: 50px;
             color: white;
         }
+
         #song {
             font-family: Arial, Helvetica, sans-serif;
             border-collapse: collapse;
@@ -61,6 +95,10 @@
         a {
             text-decoration: none
         }
+
+        nav {
+            float: none;
+        }
     </style>
 </head>
 
@@ -68,23 +106,63 @@
     {% for message in get_flashed_messages() %}
     <div class="alert">{{ message }}</div>
     {% endfor %}
-    <nav>
-        <ul>
-            <li><a  class = "active" href="{{ url_for('index') }}">音乐</a></li>
-            <li><a href="{{ url_for('SingerPage') }}">歌手</a></li>
-            <li><a href="{{ url_for('AlbumPage') }}">专辑</a></li>
-            <li><a href="{{ url_for('UserPage') }}">用户</a></li>
-        </ul>
-    </nav>
+    <div class="header w">
+        <!-- 标志模块 -->
+        <div class="logo">
+            <img src="/static/images/logo.jpg"
+                style="width: 43px;
+            height: 43px;">
+        </div>
+        <!-- 文字导航栏模块 -->
+        <div class="nav2">
+            <ul>
+                <li>
+                    <a href="{{ url_for('index') }}" class="active">音乐</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('SingerPage') }}">歌手</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('AlbumPage') }}">专辑</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('UserPage') }}">用户</a>
+                </li>
+            </ul>
+        </div>
+        <!-- 用户模块 -->
+        <div class="user">
+            <img src="https://img-blog.csdnimg.cn/8242726cba69411f84dc9a750542b1e5.png"
+                style="vertical-align: middle; height: 43px;">
+                {{cur_user}}
+            <a href="{{url_for('login')}}" style="color: white;">退出</a>
+        </div>
+    </div>
 
-    <div style="float: left;">
+    <div style="float: left; margin-left: 320px; margin-top: 20px;">
         <form class="form-inline" method="post" action="{{url_for('SearchMusic')}}">
-            歌曲名称:<input type="text" class="form-control" name="song_name">
-            歌曲类型:<input type="text" class="form-control" name="type">
-            歌手名:<input type="text" class="form-control" name="singer_name">
+            歌曲名称:<input type="text" class="form-control" name="song_name" placeholder="不输入代表不限">
+            <!--歌曲类型:<input type="text" class="form-control" name="type">-->
+            歌曲类型:
+            <select name="type" style="width:180px; height:30px; margin-left: 10px;">
+                <option>不限</option>
+                <option>流行</option>
+                <option>嘻哈说唱</option>
+                <option>民谣</option>
+                <option>摇滚</option>
+                <option>古风</option>
+                <option>二次元</option>
+            </select>
+            歌手名:<input type="text" class="form-control" name="singer_name" placeholder="不输入代表不限">
             <input type="submit" class="btn btn-primary" name="search" value="搜索">
         </form>
     </div>
+    <div style="float: left; margin-left: 5px; margin-top: 22px;">
+        <!--具体的按钮按自己点需求填就可以了，data-target="#exampleModal" 需要和下面的modal的ID对应上-->
+        <button class="btn-primary" data-toggle="modal" data-target="#exampleModal"><i
+                class="glyphicon glyphicon-plus"></i></button>
+    </div>
+    <!--
     <div style="float: right;">
         <form method="post" action="{{url_for('AddMusic')}}">
             歌曲名 <input type="text" name="song_name">
@@ -93,14 +171,15 @@
             <input class="btn btn-primary" type="submit" name="submit" value="添加">
         </form>
     </div>
+-->
     </br>
     </br>
     <center>
         <ul>
-            <table id="song" ,frame=void>
+            <table id="song" frame=void style="margin-top: 40px;">
                 <tr>
                     <td>
-                         歌曲 
+                        歌曲
                     </td>
                     <td> 类型 </td>
                     <td> 歌手 </td>
@@ -121,8 +200,8 @@
                     <td> {{ music.singer_name }}</a> </td>
                     <td>
                         <div style="display: inline-block;">
-                            <a class="btn btn-primary" href="{{ url_for('EditMusic', music_id=music.id) }}"><span
-                                    class="glyphicon glyphicon-pencil">编辑</span></a>
+                            <button class="btn-primary" data-toggle="modal" data-target="#editModal{{music.id}}"><i
+                                    class="glyphicon glyphicon-pencil"></i></button>
                         </div>
                         <div style="display: inline-block;">
                             <form method="post" action="{{ url_for('DeleteMusic', music_id=music.id) }}">
@@ -146,8 +225,8 @@
                     <td> {{ music.singer_name }}</a> </td>
                     <td>
                         <div style="display: inline-block;">
-                            <a class='btn btn-primary' href="{{ url_for('EditMusic', music_id=music.id) }}"><span
-                                    class="glyphicon glyphicon-pencil">编辑</span></a>
+                            <button class="btn-primary" data-toggle="modal" data-target="#editModal{{music.id}}"><i
+                                    class="glyphicon glyphicon-pencil"></i></button>
                         </div>
                         <div style="display: inline-block;">
                             <form method="post" action="{{ url_for('DeleteMusic', music_id=music.id) }}">
@@ -162,6 +241,140 @@
             </table>
         </ul>
     </center>
+    <br>
+    <center>
+        <nav aria-label="Page navigation example" style="position:fixed; left:600px; top:650px">
+            <ul class="pagination justify-content-center" style=" background-color: white;">
+                {% if paginate != None %}
+                {% if paginate.has_prev %}
+                <li class="page-item"><a class="page-link" href="?page={{paginate.prev_num }}">上一页</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
+                {% endif %}
+
+                {% for page in paginate.iter_pages(1,1,3,1) %}
+                {% if page %}
+                <li class="page-item {% if page==paginate.page %}active{% endif %}"><a class="page-link"
+                        href="?page={{ page }}">{{ page }}</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+                {% endif %}
+
+                {% endfor %}
+
+                {% if paginate.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ paginate.next_num }}">下一页</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">下一页</a></li>
+                {% endif %}
+                {%endif%}
+            </ul>
+        </nav>
+    </center>
+    <center>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">添加歌曲</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 这里是要提交的表单，提交到那呢？要用action来指定请求的接口，method指定请求的类型：get、post -->
+                        <form action="{{ url_for('AddMusic') }}" method="POST" class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label style="margin-left: 10px;">歌曲名:</label>
+                                <input style="margin-left: 10px;" type="text" name="song_name" class="form-constrol">
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 5px;">歌曲链接:</label>
+                                <input style="margin-left: 1px;" type="text" name="song_url" class="form-constrol">
+                            </div>
+                            <div class="form-group">
+                                <!-- 这里定义提交的表单内容，在flask中用request拿到请求的结果，但是id无法被拿到，需要用name，我这里卡了很久没找到原因，其他元素做同样的修改 -->
+                                <label style="margin-left: 15px;">类 型:</label>
+                                <!--<input style = "margin-left: 10px;" type="text" name="type" class="form-constrol" >-->
+                                <select name="type" style="width:180px; height:30px; margin-left: 15px;">
+                                    <option>流行</option>
+                                    <option>嘻哈说唱</option>
+                                    <option>民谣</option>
+                                    <option>摇滚</option>
+                                    <option>古风</option>
+                                    <option>二次元</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 18px;">歌 手:</label>
+                                <input style="margin-left: 10px;" type="text" name="singer_name" class="form-constrol">
+                            </div>
+                            <!-- 1. form的提交需要用submit。也就是Send message的button的type，设置为submit，否则无法提交，点击按钮没反应-->
+                            <!-- 2. 本来提交btn在form外面，这个需要提到form内才能提交form的信息-->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-primary">添加</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+    {%for music in musics%}
+    <div class="modal fade" id="editModal{{music.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">编辑歌曲</h4>
+                </div>
+                <div class="modal-body">
+                    <center>
+                        <!-- 这里是要提交的表单，提交到那呢？要用action来指定请求的接口，method指定请求的类型：get、post -->
+                        <form action="{{ url_for('EditMusic',music_id=music.id) }}" method="POST"
+                            class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label style="margin-left: 10px;">歌曲名:</label>
+                                <input style="margin-left: 10px;" type="text" name="song_name"
+                                    class="form-constrol" autocomplete="off" required
+                                    value="{{ music.song_name}}">
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 5px;">歌曲链接:</label>
+                                <input style="margin-left: 1px;" type="text" name="song_url"
+                                    class="form-constrol" autocomplete="off" required
+                                    value="{{ music.url}}">
+                            </div>
+                            <div class="form-group">
+                                <!-- 这里定义提交的表单内容，在flask中用request拿到请求的结果，但是id无法被拿到，需要用name，我这里卡了很久没找到原因，其他元素做同样的修改 -->
+                                <label style="margin-left: 15px;">类 型:</label>
+                                <!--<input style = "margin-left: 10px;" type="text" name="type" class="form-constrol" >-->
+                                <input type="text" style="width:180px; height:30px; margin-left: 15px;"
+                                    name="type" autocomplete="off" required value="{{ music.type }}">
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 18px;">歌 手:</label>
+                                <input style="margin-left: 10px;" type="text" name="singer_name"
+                                    class="form-constrol" autocomplete="off" required
+                                    value="{{ music.singer_name }}">
+                            </div>
+                            <!-- 1. form的提交需要用submit。也就是Send message的button的type，设置为submit，否则无法提交，点击按钮没反应-->
+                            <!-- 2. 本来提交btn在form外面，这个需要提到form内才能提交form的信息-->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-primary">更新</button>
+                            </div>
+                        </form>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%endfor%}
 </body>
 
 </html>

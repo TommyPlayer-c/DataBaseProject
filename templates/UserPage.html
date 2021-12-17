@@ -10,34 +10,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <style>
-        nav ul {
-            list-style-type: none;
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            background-color: #333;
-            top: 0;
+        }
+
+        .w {
             width: 100%;
+            margin: auto;
         }
 
-        nav li {
-            float: left;
+        li {
+            list-style: none;
         }
 
-        nav li a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
+        a {
             text-decoration: none;
         }
 
-        a.active {
-            background-color:dodgerblue;
+        .header {
+            height: 43px;
+            margin: 30px auto;
+            background-color: #333;
+            margin-top: 0px;
+        }
+
+        .logo {
+            float: left;
+            width: 198px;
+            height: 43px;
+            margin-left: 30px;
+        }
+
+        .nav2 {
+            float: left;
+            margin-left: 350px;
+        }
+
+        .nav2 ul li {
+            float: left;
+            margin: 0 15px;
+        }
+
+        .nav2 ul li a {
+            display: block;
+            height: 43px;
+            padding: 0 10px;
+            line-height: 43px;
             color: white;
         }
-        nav li a:hover {
-            background-color: #111;
+
+        .nav2 ul li a:hover {
+            border-bottom: 2px solid #00a4ff;
+        }
+
+        a.active {
+            background-color: #00a4ff;
+        }
+
+        .user {
+            float: right;
+            margin-right: 50px;
+            color: white;
         }
         #users {
             font-family: Arial, Helvetica, sans-serif;
@@ -68,14 +102,38 @@
     {% for message in get_flashed_messages() %}
     <div class="alert">{{ message }}</div>
     {% endfor %}
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">歌曲</a></li>
-            <li><a href="{{ url_for('SingerPage') }}">歌手</a></li>
-            <li><a href="{{ url_for('AlbumPage') }}">专辑</a></li>
-            <li><a class = "active" href="{{ url_for('UserPage') }}">用户</a></li>
-        </ul>
-    </nav>
+    <div class="header w">
+        <!-- 标志模块 -->
+        <div class="logo">
+            <img src="/static/images/logo.jpg"
+                style="width: 43px;
+            height: 43px;">
+        </div>
+        <!-- 文字导航栏模块 -->
+        <div class="nav2">
+            <ul>
+                <li>
+                    <a href="{{ url_for('index') }}">音乐</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('SingerPage') }}">歌手</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('AlbumPage') }}">专辑</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('UserPage') }}" class="active">用户</a>
+                </li>
+            </ul>
+        </div>
+        <!-- 用户模块 -->
+        <div class="user" >
+            <img src="https://img-blog.csdnimg.cn/8242726cba69411f84dc9a750542b1e5.png"
+                style="vertical-align: middle; height: 43px;">
+                {{cur_user}}
+            <a href="{{url_for('login')}}" style="color: white;">退出</a>
+        </div>
+    </div>
     <center>
     <table id="users">
         <thead>

@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-	<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <style>
@@ -18,39 +18,76 @@
 
         .box img {
             margin: auto;
-            width: 50%;
-            height: 50%;
+            /*width: 50%;
+            height: 50%;*/
+
         }
-        nav ul {
-            list-style-type: none;
+
+
+        a.active {
+            background-color: dodgerblue;
+            color: white;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            background-color: #333;
-            top: 0;
+        }
+
+        .w {
             width: 100%;
+            margin: auto;
         }
 
-        nav li {
-            float: left;
+        li {
+            list-style: none;
         }
 
-        nav li a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
+        a {
             text-decoration: none;
         }
 
-        a.active {
-            background-color:dodgerblue;
+        .header {
+            height: 43px;
+            margin: 30px auto;
+            background-color: #333;
+            margin-top: 0px;
+        }
+
+        .logo {
+            float: left;
+            width: 198px;
+            height: 43px;
+            margin-left: 30px;
+        }
+
+        .nav2 {
+            float: left;
+            margin-left: 350px;
+        }
+
+        .nav2 ul li {
+            float: left;
+            margin: 0 15px;
+        }
+
+        .nav2 ul li a {
+            display: block;
+            height: 43px;
+            padding: 0 10px;
+            line-height: 43px;
             color: white;
         }
-        nav li a:hover {
-            background-color: #111;
+
+        .nav2 ul li a:hover {
+            border-bottom: 2px solid #00a4ff;
         }
-    
+
+        .user {
+            float: right;
+            margin-right: 50px;
+            color: white;
+        }
     </style>
 </head>
 
@@ -58,38 +95,56 @@
     {% for message in get_flashed_messages() %}
     <div class="alert">{{ message }}</div>
     {% endfor %}
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">音乐</a></li>
-            <li><a href="{{ url_for('SingerPage') }}">歌手</a></li>
-            <li><a class = "active"href="{{ url_for('AlbumPage') }}">专辑</a></li>
-            <li><a href="{{ url_for('UserPage') }}">用户</a></li>
-        </ul>
-    </nav>
-    <!--
-    <a class="btn" href="{{ url_for('SearchAlbum') }}">搜索专辑</a>
-    -->
-    <div style="float: left;">
-    <form class="form-inline" method="post" action="{{url_for('SearchAlbum')}}">
-        专辑名:<input type="text" class="form-control" name="album_name">
-        发行年份:<input type="text" class="form-control" name="year">
-        歌手名:<input type="text" class="form-control" name="singer_name">
-        <input type="submit" class = "btn btn-primary" name="search" value="搜索">
-    </form>
+    <div class="header w">
+        <div class="logo">
+            <img src="/static/images/logo.jpg" style="width: 43px;
+            height: 43px;">
+        </div>
+        <div class="nav2">
+            <ul>
+                <li>
+                    <a href="{{ url_for('index') }}">音乐</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('SingerPage') }}">歌手</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('AlbumPage') }}" class="active">专辑</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('UserPage') }}">用户</a>
+                </li>
+            </ul>
+        </div>
+        <div class="user">
+            <img src="https://img-blog.csdnimg.cn/8242726cba69411f84dc9a750542b1e5.png"
+                style="vertical-align: middle; height: 43px;">
+            {{cur_user}}
+            <a href="{{url_for('login')}}" style="color: white;">退出</a>
+        </div>
     </div>
-    <div  style="float: right;">
-    <form method="post">
-        专辑名 <input type="text" name="album_name" autocomplete="off" required>
-        发行年 <input type="text" name="year" autocomplete="off" required>
-        歌曲数量 <input type="text" name="song_num" autocomplete="off" required>
-        歌手 <input type="text" name="singer_name" autocomplete="off" required>
-        <input class="btn btn-primary" type="submit" name="submit" value="添加">
-    </form>
-</div>
+
+    <div style="float: left; margin-left: 100px; margin-top: 0px;">
+        <form class="form-inline" method="post" action="{{url_for('SearchAlbum')}}">
+            专辑名:<input type="text" class="form-control" name="album_name" placeholder="不输入代表不限">
+            发行年份:<input type="text" class="form-control" name="year" placeholder="不输入代表不限">
+            歌手名:<input type="text" class="form-control" name="singer_name" placeholder="不输入代表不限">
+            歌曲数目范围:
+            <input type="text" class="form-control" name="lower_song_num" placeholder="数目下界">
+            --
+            <input type="text" class="form-control" name="upper_song_num" placeholder="数目上界">
+            <input type="submit" class="btn btn-primary" name="search" value="筛选">
+        </form>
+    </div>
+    <div style="float: left; margin-left: 5px;">
+        <button class="btn-primary" data-toggle="modal" data-target="#exampleModal"><i
+                class="glyphicon glyphicon-plus"></i></button>
+    </div>
+
     <ul>
         {% for album in albums %}
         <div class="box">
-            <img src="{{ url_for('static', filename=album.album_fig) }}" alt=album.album_name width="300" height="300">
+            <img src="{{ url_for('static', filename=album.album_fig) }}" alt=album.album_name width="180" height="180">
             <br />
             专辑名:{{album.album_name}}
             <br />
@@ -99,16 +154,132 @@
             <br />
             歌曲数目:{{ album.song_num }}
             <br />
-            <a class="btn btn-default btn-xs" href="{{ url_for('EditAlbum', album_name=album.album_name) }}">
-                <span class="glyphicon glyphicon-pencil">编辑</span></a>
-            </a>
-            <br />
-            <form class="inline-form" method="post" action="{{ url_for('DeleteAlbum', album_name=album.album_name) }}">
-                <input class="btn btn-default btn-xs" type="submit" name="delete" value="删除" onclick="return confirm('Are you sure?')">
-            </form>
+            <div style="float: left; margin-left: 200px; margin-top: 1px;">
+                <button class="btn-primary" data-toggle="modal" data-target="#editModal{{album.album_name}}"><i
+                        class="glyphicon glyphicon-pencil"></i></button>
+            </div>
+            <div style="float: left; margin-left: 2px; margin-top: 1px;">
+                <form class="inline-form" method="post"
+                    action="{{ url_for('DeleteAlbum', album_name=album.album_name) }}">
+                    <input class="btn btn-default btn-xs" type="submit" name="delete" value="删除"
+                        onclick="return confirm('Are you sure?')">
+                </form>
+            </div>
         </div>
         {% endfor %}
     </ul>
+    <br>
+    <center>
+        <nav aria-label="Page navigation example" style="position:fixed; left:600px; bottom:5px">
+            <ul class="pagination justify-content-center" style=" background-color: white;">
+                {% if paginate != None %}
+                {% if paginate.has_prev %}
+                <li class="page-item"><a class="page-link" href="?page={{paginate.prev_num }}">上一页</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
+                {% endif %}
+
+                {% for page in paginate.iter_pages(1,1,3,1) %}
+                {% if page %}
+                <li class="page-item {% if page==paginate.page %}active{% endif %}"><a class="page-link"
+                        href="?page={{ page }}">{{ page }}</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+                {% endif %}
+
+                {% endfor %}
+
+                {% if paginate.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ paginate.next_num }}">下一页</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">下一页</a></li>
+                {% endif %}
+                {%endif%}
+            </ul>
+        </nav>
+    </center>
+    <center>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">添加专辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('AlbumPage') }}" method="POST" class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label style="margin-left: 10px;">名称:</label>
+                                <input style="margin-left: 25px;" type="text" name="album_name" class="form-constrol">
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 5px;">发行年份:</label>
+                                <input style="margin-left: 1px;" type="text" name="year" class="form-constrol">
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 5px;">歌曲数目:</label>
+                                <input style="margin-left: 1px;" type="text" name="song_num" class="form-constrol">
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 10px;">歌手:</label>
+                                <input style="margin-left: 25px;" type="text" name="singer_name" class="form-constrol">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-primary">添加</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+    {%for album in albums%}
+    <center>
+        <div class="modal fade" id="editModal{{album.album_name}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">编辑专辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('EditAlbum',album_name=album.album_name) }}" method="POST"
+                            class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label style="margin-left: 10px;">名称:</label>
+                                <input style="margin-left: 25px;" type="text" name="album_name"
+                                    class="form-constrol" autocomplete="off" reqired value="{{album.album_name}}">
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 5px;">发行年份:</label>
+                                <input style="margin-left: 1px;" type="text" name="year" class="form-constrol"
+                                    autocomplete="off" required value = "{{album.year}}">
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 5px;">歌曲数目:</label>
+                                <input style="margin-left: 1px;" type="text" name="song_num" class="form-constrol"
+                                    autocomplete="off" required value = "{{album.song_num}}">
+                            </div>
+                            <div class="form-group">
+                                <label style="margin-left: 10px;">歌手:</label>
+                                <input style="margin-left: 25px;" type="text" name="singer_name"
+                                    class="form-constrol" autocomplete="off" required value = "{{album.singer_name}}">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-primary">更新</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+    {%endfor%}
 </body>
 
 </html>

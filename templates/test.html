@@ -1,24 +1,82 @@
-<div class="modal-content">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                aria-hidden="true">×</span></button>
-        <h4 class="modal-title" id="myModalLabel">添加数据字典</h4>
-    </div>
-    <div class="modal-body">
-        <form class="form-horizontal" role="form" id="add-key-form" action="system/dic-save.json" method="post">
-            <div class="form-group">
-                <label class="col-sm-2 control-label"><i class="required">* </i>键：</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" name="keyName" placeholder="请输入字典键" />
-                </div>
-                <label class="col-sm-2 control-label"><i class="required">* </i>值：</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" name="keyValue" placeholder="请输入字典值">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">保存</button>
-            </div>
-        </form>
-    </div>
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html:charset=utf-8"/>
+<title>通过表单实现酒店筛选</title>
+<link rel="stylesheet" href="1-1.css">
+</head>
+<body>
+<div class="mr-content">
+<div class="mr-container">
+    <form>
+    	<div class="mr-line">
+    		<span>目的地</span><input type="text">
+    		<span>入住时间</span><input type="text">
+    		<span>退房时间</span><input type="text">
+    	</div>
+    	<div class="mr-line">
+    		<span>酒店位置</span>
+    		<select>
+				<option selected>景点1</option>
+				<option selected>景点2</option>
+    			<option selected>景点3</option>
+				<option selected>景点</option>
+    		</select>
+    		<select>
+				<option selected>交通枢纽1</option>
+				<option selected>交通枢纽2</option>
+				<option selected>交通枢纽3</option>
+    			<option selected>交通枢纽</option>
+    		</select>
+    		<select>
+				<option selected>地铁周边1</option>
+				<option selected>地铁周边2</option>
+				<option selected>地铁周边3</option>
+    			<option selected>地铁周边</option>
+    		</select>
+    		<select>
+    			<option selected>行政区1</option>
+				<option selected>行政区2</option>
+				<option selected>行政区3</option>
+				<option selected>行政区</option>
+    		</select>
+    	</div>
+    	<div class="mr-line">
+    		<span>酒店价格</span>
+    		<span>不限</span>
+    		<input type="radio">
+    		<span>100元以下</span>
+    		<input type="radio">
+    		<span>100-300元</span>
+    		<input type="radio">
+    		<span>300-600元</span>
+    		<input type="radio">
+    		<span>600-1500元</span>
+    	</div>
+    	<div class="mr-line">
+    		<span>酒店星级</span>
+    		<span>不限</span>
+    		<input type="checkbox">
+    		<span>五星/豪华</span>
+    		<input type="checkbox">
+    		<span>四星/高档</span>
+    		<input type="checkbox">
+    		<span>三星/舒适</span>
+    	</div>
+    	<div class="me-line">
+    		<span>主题风格</span>
+    		<span>不限</span>
+    		<input type="checkbox">
+    		<span>客栈</span>
+    		<input type="checkbox">
+    		<span>精品酒店</span>
+    		<input type="checkbox">
+    		<span>情侣酒店</span>
+    		<input type="checkbox">
+    		<span>园林庭院</span>
+    	</div>
+    </form>
 </div>
+	</body>
+</html>
+
