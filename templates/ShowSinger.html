@@ -142,9 +142,7 @@
     <div class="header w">
         <!-- 标志模块 -->
         <div class="logo">
-            <img src="/static/images/logo.jpg"
-                style="width: 43px;
-            height: 43px;">
+            <div style="font-size:25px;color: aliceblue; margin-top: 6px;">The Young</div>
         </div>
         <!-- 文字导航栏模块 -->
         <div class="nav2">
@@ -164,11 +162,17 @@
             </ul>
         </div>
         <!-- 用户模块 -->
-        <div class="user" >
+        <div class="user">
             <img src="https://img-blog.csdnimg.cn/8242726cba69411f84dc9a750542b1e5.png"
                 style="vertical-align: middle; height: 43px;">
                 {{cur_user}}
             <a href="{{url_for('login')}}" style="color: white;">退出</a>
+        </div>
+        <div style="float:right;margin-right: 70px; margin-top: 5px;">
+            <form class="form-inline" method="post"  action="{{ url_for('searchkeyword')}}">
+                    <input type="text" class="form-control" name="keyword" placeholder="请输入关键字">
+                    <input type="submit" class="btn btn-primary" name="search" value="搜索">
+            </form>
         </div>
     </div>
 
