@@ -91,8 +91,7 @@
     <div class="header w">
         <!-- 标志模块 -->
         <div class="logo">
-            <img src="/static/images/logo.jpg" style="width: 43px;
-            height: 43px;">
+            <div style="font-size:25px;color: aliceblue; margin-top: 6px;">The Young</div>
         </div>
         <!-- 文字导航栏模块 -->
         <div class="nav2">
@@ -115,8 +114,14 @@
         <div class="user">
             <img src="https://img-blog.csdnimg.cn/8242726cba69411f84dc9a750542b1e5.png"
                 style="vertical-align: middle; height: 43px;">
-                {{cur_user}}
+            {{cur_user}}
             <a href="{{url_for('login')}}" style="color: white;">退出</a>
+        </div>
+        <div style="float:right;margin-right: 70px; margin-top: 5px;">
+            <form class="form-inline" method="post" action="{{ url_for('searchkeyword')}}">
+                <input type="text" class="form-control" name="keyword" placeholder="请输入关键字">
+                <input type="submit" class="btn btn-primary" name="search" value="搜索">
+            </form>
         </div>
     </div>
     <div>
@@ -132,7 +137,7 @@
                     <option>韩语</option>
                     <option>日本</option>
                 </select>
-                
+
                 <!--类型:<input type="text" class="form-control" name="singer_sex" placeholder="男,女,组合">-->
                 类型:
                 <select name="singer_sex" style="width:180px; height:30px; margin-left: 10px;">
@@ -174,14 +179,17 @@
         <br />
         <a href="{{ url_for('ShowSinger', singer_name=singer.singer_name) }}">{{ singer.singer_name }}</a>
         <br />
-        <button class="btn-primary" data-toggle="modal" data-target="#editModal{{singer.singer_name}}"><i
-                class="glyphicon glyphicon-pencil"></i></button>
-
-        <br />
-        <form class="inline-form" method="post" action="{{ url_for('DeleteSinger', singer_name=singer.singer_name) }}">
-            <input class="btn btn-xs btn-default" type="submit" name="delete" value="删除"
-                onclick="return confirm('Are you sure?')">
-        </form>
+        <div style="float: left; margin-left: 125px; margin-top: 1px;">
+            <button class="btn-primary" data-toggle="modal" data-target="#editModal{{singer.singer_name}}"><i
+                    class="glyphicon glyphicon-pencil"></i></button>
+        </div>
+        <div style="float: left; margin-left: 2px; margin-top: 1px;">
+            <form class="inline-form" method="post"
+                action="{{ url_for('DeleteSinger', singer_name=singer.singer_name) }}">
+                <input class="btn btn-xs btn-default" type="submit" name="delete" value="删除"
+                    onclick="return confirm('Are you sure?')">
+            </form>
+        </div>
     </div>
 
     {% endfor %}
@@ -291,7 +299,8 @@
     </center>
     {%for singer in singers%}
     <center>
-        <div class="modal fade" id="editModal{{singer.singer_name}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal fade" id="editModal{{singer.singer_name}}" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">

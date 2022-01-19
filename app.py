@@ -185,6 +185,14 @@ def register():
     flash('注册成功')
     return render_template('register.html')
 
+@app.route('/keyword',methods=['POST'])
+def searchkeyword():
+    keyword = request.form.get('keyword')
+    results1 = Music.query.filter(Music.song_name.like("%"+keyword+"%")).all()
+    results2 = Singer.query.filter(Singer.singer_name.like("%"+keyword+"%")).all()
+    results3 = Album.query.filter(Album.album_name.like("%"+keyword+"%")).all()
+    results4 = User.query.filter(User.user_name.like("%"+keyword+"%")).all()
+    return render_template('keyword.html',musics = results1,singers = results2,albums=results3,users=results4)
 
 @app.route('/music', methods=['GET', 'POST'])
 def index():
